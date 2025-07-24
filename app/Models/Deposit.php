@@ -18,7 +18,7 @@ class Deposit extends Model
 
     protected $dates = ['deleted_at'];
 
-    protected $appends = ['total_amount', 'total_penalty_amount'];
+//    protected $appends = ['total_amount', 'total_penalty_amount'];
 
     // Define default relationships to always load
     protected $with = [];

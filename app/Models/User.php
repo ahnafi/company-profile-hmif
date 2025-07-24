@@ -55,11 +55,11 @@ class User extends Authenticatable implements MustVerifyEmail, FilamentUser
         $panelId = $panel->getId();
 
         return match (true) {
-            $this->hasRole('admin')      && $panelId === 'admin'      => true,
-            $this->hasRole('bendahara')  && $panelId === 'keuangan'   => true,
-            $this->hasRole('kreus')      && $panelId === 'kreus'      => true,
-            $this->hasRole('iltek')      && $panelId === 'iltek'      => true,
-            $this->hasRole('mikat')      && $panelId === 'mikat'      => true,
+            $this->hasRole('admin') && $panelId === 'adminhmif' => true,
+            $this->hasRole('bendahara') && $panelId === 'finance' => true,
+            $this->hasRole('kreus') && $panelId === 'kreus' => true,
+            $this->hasRole('iltek') && $panelId === 'iltek' => true,
+            $this->hasRole('mikat') && $panelId === 'mikat' => true,
             default => false,
         };
     }

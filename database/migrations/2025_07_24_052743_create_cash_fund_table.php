@@ -17,7 +17,6 @@ return new class extends Migration {
             $table->date("date");
             $table->enum("month", ["april", "may", "june", "july", "august", "september", "october", "november"]);
             $table->integer("penalty");
-            $table->integer("cash");
             $table->integer("amount");
             $table->timestamps();
         });

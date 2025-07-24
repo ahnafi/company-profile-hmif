@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Cash extends Model
@@ -26,12 +27,10 @@ class Cash extends Model
     }
 
     /**
-     * Get funds related to this cash
+     * Get cash fund records
      */
-    public function funds(): BelongsToMany
+    public function cashFunds(): HasMany
     {
-        return $this->belongsToMany(Fund::class, 'cash_fund')
-            ->withPivot('date', 'month', 'penalty', 'cash', 'amount')
-            ->withTimestamps();
+        return $this->hasMany(CashFund::class);
     }
 }

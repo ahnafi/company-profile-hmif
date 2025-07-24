@@ -31,17 +31,12 @@ class Fund extends Model
     public function cashes(): BelongsToMany
     {
         return $this->belongsToMany(Cash::class, 'cash_fund')
-            ->withPivot('date', 'month', 'penalty', 'cash', 'amount')
+            ->withPivot('date', 'month', 'penalty', 'amount')
             ->withTimestamps();
     }
 
-    /**
-     * Get deposits related to this fund
-     */
-    public function deposits(): BelongsToMany
+    public function cashFunds(): HasMany
     {
-        return $this->belongsToMany(Deposit::class, 'deposit_fund')
-            ->withPivot('date', 'amount')
-            ->withTimestamps();
+        return $this->hasMany(CashFund::class);
     }
 }
