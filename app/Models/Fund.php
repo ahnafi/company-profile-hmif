@@ -25,18 +25,13 @@ class Fund extends Model
         return $this->hasMany(Transaction::class);
     }
 
-    /**
-     * Get cashes related to this fund
-     */
-    public function cashes(): BelongsToMany
-    {
-        return $this->belongsToMany(Cash::class, 'cash_fund')
-            ->withPivot('date', 'month', 'penalty', 'amount')
-            ->withTimestamps();
-    }
-
     public function cashFunds(): HasMany
     {
         return $this->hasMany(CashFund::class);
+    }
+
+    public function depositFunds(): HasMany
+    {
+        return $this->hasMany(DepositFund::class);
     }
 }

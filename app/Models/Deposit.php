@@ -16,13 +16,6 @@ class Deposit extends Model
         'administrator_id',
     ];
 
-    protected $dates = ['deleted_at'];
-
-//    protected $appends = ['total_amount', 'total_penalty_amount'];
-
-    // Define default relationships to always load
-    protected $with = [];
-
     /**
      * Get the administrator that owns the deposit
      */
@@ -31,14 +24,9 @@ class Deposit extends Model
         return $this->belongsTo(Administrator::class);
     }
 
-    /**
-     * Get funds related to this deposit
-     */
-    public function funds(): BelongsToMany
+    public function depositFunds(): HasMany
     {
-        return $this->belongsToMany(Fund::class, 'deposit_fund')
-            ->withPivot('date', 'amount')
-            ->withTimestamps();
+        return $this->hasMany(DepositFund::class);
     }
 
     /**
@@ -49,48 +37,86 @@ class Deposit extends Model
         return $this->hasMany(DepositPenalty::class);
     }
 
-//    /**
-//     * Get the total amount from pivot funds
-//     */
-//    public function getTotalAmountAttribute(): int
-//    {
-//        return $this->funds->sum('pivot.amount');
-//    }
+    /**
+     * Get total penalty amount by detail type
+     */
+    public function getPenaltyAmountByDetail(string $detail): int
+    {
+        return $this->depositPenalties()
+            ->where('detail', $detail)
+            ->sum('amount');
+    }
 
-//    /**
-//     * Get the total penalty amount from all penalty fields
-//     */
-//    public function getTotalPenaltyAmountAttribute(): int
-//    {
-//        return ($this->plenary_meeting ?? 0) +
-//            ($this->jacket_day ?? 0) +
-//            ($this->graduation_ceremony ?? 0) +
-//            ($this->secretariat_maintenance ?? 0) +
-//            ($this->work_program ?? 0) +
-//            ($this->other ?? 0);
-//    }
+    /**
+     * Get plenary meeting penalty amount
+     */
+    public function getPlenaryMeetingAttribute(): int
+    {
+        return $this->getPenaltyAmountByDetail('plenary_meeting');
+    }
 
-//    /**
-//     * Scope to load all necessary relationships
-//     */
-//    public function scopeWithFullData($query)
-//    {
-//        return $query->with([
-//            'administrator.division',
-//            'funds' => function ($query) {
-//                $query->withPivot('date', 'amount');
-//            }
-//        ])->withCount('funds');
-//    }
+    /**
+     * Get jacket day penalty amount
+     */
+    public function getJacketDayAttribute(): int
+    {
+        return $this->getPenaltyAmountByDetail('jacket_day');
+    }
 
-//    /**
-//     * Scope to load deposit penalties with relationships
-//     */
-//    public function scopeWithPenalties($query)
-//    {
-//        return $query->with([
-//            'depositPenalties',
-//            'administrator.division'
-//        ]);
-//    }
+    /**
+     * Get graduation ceremony penalty amount
+     */
+    public function getGraduationCeremonyAttribute(): int
+    {
+        return $this->getPenaltyAmountByDetail('graduation_ceremony');
+    }
+
+    /**
+     * Get secretariat maintenance penalty amount
+     */
+    public function getSecretariatMaintenanceAttribute(): int
+    {
+        return $this->getPenaltyAmountByDetail('secretariat_maintenance');
+    }
+
+    /**
+     * Get work program penalty amount
+     */
+    public function getWorkProgramAttribute(): int
+    {
+        return $this->getPenaltyAmountByDetail('work_program');
+    }
+
+    /**
+     * Get other penalty amount
+     */
+    public function getOtherAttribute(): int
+    {
+        return $this->getPenaltyAmountByDetail('other');
+    }
+
+    /**
+     * Get total penalty amount
+     */
+    public function getTotalPenaltyAmountAttribute(): int
+    {
+        return $this->depositPenalties()->sum('amount');
+    }
+
+    /**
+     * Get total deposit fund amount
+     */
+    public function getTotalDepositFundAttribute(): int
+    {
+        return $this->depositFunds()->sum('amount');
+    }
+
+    /**
+     * Get deposit amount (total funds - total penalties)
+     */
+    public function getDepositAttribute(): int
+    {
+        return $this->total_deposit_fund - $this->total_penalty_amount;
+    }
+
 }

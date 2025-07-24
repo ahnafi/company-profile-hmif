@@ -32,190 +32,79 @@ class CashResource extends Resource
 
     public static function table(Table $table): Table
     {
+        $months = [
+            'april' => 'April',
+            'may' => 'May', 
+            'june' => 'June',
+            'july' => 'July',
+            'august' => 'August',
+            'september' => 'September',
+            'october' => 'October',
+            'november' => 'November',
+        ];
+
+        $columns = [
+            Tables\Columns\TextColumn::make('administrator.name')
+                ->description(fn($record) => $record->administrator?->division?->name)
+                ->searchable()
+                ->sortable(),
+        ];
+
+        // Add month columns dynamically
+        foreach ($months as $monthKey => $monthLabel) {
+            $columns[] = Tables\Columns\TextColumn::make($monthKey)
+                ->label($monthLabel)
+                ->getStateUsing(fn($record) => $record->{$monthKey})
+                ->money('IDR')
+                ->summarize([
+                    Tables\Columns\Summarizers\Summarizer::make()
+                        ->label('Total')
+                        ->using(fn() => \App\Models\Cash::getTotalByMonth($monthKey))
+                        ->money('IDR')
+                ]);
+        }
+
+        // Add total column
+        $columns[] = Tables\Columns\TextColumn::make('total_cash_fund')
+            ->label('Total')
+            ->getStateUsing(fn($record) => $record->total_cash_fund)
+            ->money('IDR')
+            ->weight('bold')
+            ->color('success')
+            ->summarize([
+                Tables\Columns\Summarizers\Summarizer::make()
+                    ->label('Grand Total')
+                    ->using(function() {
+                        return \App\Models\Cash::with('cashFunds')->get()
+                            ->sum(fn($record) => $record->total_cash_fund);
+                    })
+                    ->money('IDR')
+            ]);
+
+        // Add standard timestamp columns
+        $columns = array_merge($columns, [
+            Tables\Columns\TextColumn::make('created_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('updated_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('deleted_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+        ]);
+
         return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('administrator.name')
-                    ->description(fn($record) => $record->administrator?->division?->name)
-                    ->searchable()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('april')
-                    ->label('April')
-                    ->formatStateUsing(
-                        fn($record) => $record->cashFunds->where('month', 'april')
-                            ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                    )
-                    ->default(0)
-                    ->summarize([
-                        Tables\Columns\Summarizers\Summarizer::make()
-                            ->label('Total')
-                            ->using(function () {
-                                return \App\Models\Cash::with('cashFunds')->get()
-                                    ->sum(fn($record) => $record->cashFunds->where('month', 'april')
-                                        ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                                    );
-                            })
-                            ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
-                    ])
-                    ->prefix("Rp "),
-                Tables\Columns\TextColumn::make('may')
-                    ->label('May')
-                    ->formatStateUsing(
-                        fn($record) => $record->cashFunds->where('month', 'may')
-                            ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                    )
-                    ->default(0)
-                    ->summarize([
-                        Tables\Columns\Summarizers\Summarizer::make()
-                            ->label('Total')
-                            ->using(function () {
-                                return \App\Models\Cash::with('cashFunds')->get()
-                                    ->sum(fn($record) => $record->cashFunds->where('month', 'may')
-                                        ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                                    );
-                            })
-                            ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
-                    ])
-                    ->prefix("Rp "),
-                Tables\Columns\TextColumn::make('june')
-                    ->label('June')
-                    ->formatStateUsing(
-                        fn($record) => $record->cashFunds->where('month', 'june')
-                            ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                    )
-                    ->default(0)
-                    ->summarize([
-                        Tables\Columns\Summarizers\Summarizer::make()
-                            ->label('Total')
-                            ->using(function () {
-                                return \App\Models\Cash::with('cashFunds')->get()
-                                    ->sum(fn($record) => $record->cashFunds->where('month', 'june')
-                                        ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                                    );
-                            })
-                            ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
-                    ])
-                    ->prefix("Rp "),
-                Tables\Columns\TextColumn::make('july')
-                    ->label('July')
-                    ->formatStateUsing(
-                        fn($record) => $record->cashFunds->where('month', 'july')
-                            ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                    )
-                    ->default(0)
-                    ->summarize([
-                        Tables\Columns\Summarizers\Summarizer::make()
-                            ->label('Total')
-                            ->using(function () {
-                                return \App\Models\Cash::with('cashFunds')->get()
-                                    ->sum(fn($record) => $record->cashFunds->where('month', 'july')
-                                        ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                                    );
-                            })
-                            ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
-                    ])
-                    ->prefix("Rp "),
-                Tables\Columns\TextColumn::make('august')
-                    ->label('August')
-                    ->formatStateUsing(
-                        fn($record) => $record->cashFunds->where('month', 'august')
-                            ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                    )
-                    ->default(0)
-                    ->summarize([
-                        Tables\Columns\Summarizers\Summarizer::make()
-                            ->label('Total')
-                            ->using(function () {
-                                return \App\Models\Cash::with('cashFunds')->get()
-                                    ->sum(fn($record) => $record->cashFunds->where('month', 'august')
-                                        ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                                    );
-                            })
-                            ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
-                    ])
-                    ->prefix("Rp "),
-                Tables\Columns\TextColumn::make('september')
-                    ->label('September')
-                    ->formatStateUsing(
-                        fn($record) => $record->cashFunds->where('month', 'september')
-                            ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                    )
-                    ->default(0)
-                    ->summarize([
-                        Tables\Columns\Summarizers\Summarizer::make()
-                            ->label('Total')
-                            ->using(function () {
-                                return \App\Models\Cash::with('cashFunds')->get()
-                                    ->sum(fn($record) => $record->cashFunds->where('month', 'september')
-                                        ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                                    );
-                            })
-                            ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
-                    ])
-                    ->prefix("Rp "),
-                Tables\Columns\TextColumn::make('october')
-                    ->label('October')
-                    ->formatStateUsing(
-                        fn($record) => $record->cashFunds->where('month', 'october')
-                            ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                    )
-                    ->default(0)
-                    ->summarize([
-                        Tables\Columns\Summarizers\Summarizer::make()
-                            ->label('Total')
-                            ->using(function () {
-                                return \App\Models\Cash::with('cashFunds')->get()
-                                    ->sum(fn($record) => $record->cashFunds->where('month', 'october')
-                                        ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                                    );
-                            })
-                            ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
-                    ])
-                    ->prefix("Rp "),
-                Tables\Columns\TextColumn::make('november')
-                    ->label('November')
-                    ->formatStateUsing(
-                        fn($record) => $record->cashFunds->where('month', 'november')
-                            ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                    )
-                    ->default(0)
-                    ->summarize([
-                        Tables\Columns\Summarizers\Summarizer::make()
-                            ->label('Total')
-                            ->using(function () {
-                                return \App\Models\Cash::with('cashFunds')->get()
-                                    ->sum(fn($record) => $record->cashFunds->where('month', 'november')
-                                        ->sum(fn($fund) => $fund->amount + $fund->penalty)
-                                    );
-                            })
-                            ->formatStateUsing(fn($state) => 'Rp ' . number_format($state, 0, ',', '.'))
-                    ])
-                    ->prefix("Rp "),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
+            ->columns($columns)
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
             ]);
-        //            ->bulkActions([
-//                Tables\Actions\BulkActionGroup::make([
-//                    Tables\Actions\DeleteBulkAction::make(),
-//                    Tables\Actions\ForceDeleteBulkAction::make(),
-//                    Tables\Actions\RestoreBulkAction::make(),
-//                ]),
-//            ]);
     }
 
     public static function getRelations(): array

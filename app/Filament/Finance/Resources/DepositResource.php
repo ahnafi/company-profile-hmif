@@ -25,6 +25,7 @@ class DepositResource extends Resource
             ->schema([
                 Forms\Components\Select::make('administrator_id')
                     ->relationship('administrator', 'name')
+                    ->disabledOn("edit")
                     ->required(),
             ]);
     }
@@ -34,8 +35,84 @@ class DepositResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('administrator.name')
-                    ->numeric()
+                    ->searchable()
+                    ->description(fn($record) => $record->administrator?->division?->name)
                     ->sortable(),
+                Tables\Columns\TextColumn::make('total_deposit_fund')
+                    ->label('Total Dana')
+                    ->money('IDR')
+                    ->getStateUsing(fn($record) => $record->total_deposit_fund)
+                    ->color('info')
+                    ->summarize([
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total')
+                            ->using(function () {
+                                return \App\Models\Deposit::with('depositFunds')->get()
+                                    ->sum(fn($record) => $record->total_deposit_fund);
+                            })
+                            ->money('IDR')
+                    ]),
+                Tables\Columns\TextColumn::make("deposit")
+                    ->label('Sisa Deposit')
+                    ->money('IDR')
+                    ->getStateUsing(fn($record) => $record->deposit)
+                    ->weight('bold')
+                    ->color(fn($record) => $record->deposit >= 0 ? 'success' : 'danger')
+                    ->summarize([
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total')
+                            ->using(function () {
+                                return \App\Models\Deposit::with(['depositFunds', 'depositPenalties'])->get()
+                                    ->sum(fn($record) => $record->deposit);
+                            })
+                            ->money('IDR')
+                    ]),
+                Tables\Columns\TextColumn::make('plenary_meeting')
+                    ->label('Rapat Pleno')
+                    ->money('IDR')
+                    ->default(0)
+                    ->getStateUsing(fn($record) => $record->plenary_meeting),
+                Tables\Columns\TextColumn::make('jacket_day')
+                    ->label('Jahim Day')
+                    ->money('IDR')
+                    ->default(0)
+                    ->getStateUsing(fn($record) => $record->jacket_day),
+                Tables\Columns\TextColumn::make('graduation_ceremony')
+                    ->label('Wisuda')
+                    ->money('IDR')
+                    ->default(0)
+                    ->getStateUsing(fn($record) => $record->graduation_ceremony),
+                Tables\Columns\TextColumn::make('secretariat_maintenance')
+                    ->label('Piket Pesek')
+                    ->money('IDR')
+                    ->default(0)
+                    ->getStateUsing(fn($record) => $record->secretariat_maintenance),
+                Tables\Columns\TextColumn::make('work_program')
+                    ->label('Proker')
+                    ->money('IDR')
+                    ->default(0)
+                    ->getStateUsing(fn($record) => $record->work_program),
+                Tables\Columns\TextColumn::make('other')
+                    ->label('Lainnya')
+                    ->money('IDR')
+                    ->default(0)
+                    ->getStateUsing(fn($record) => $record->other),
+                Tables\Columns\TextColumn::make('total_penalty_amount')
+                    ->label('Total Denda')
+                    ->money('IDR')
+                    ->default(0)
+                    ->getStateUsing(fn($record) => $record->total_penalty_amount)
+                    ->weight('bold')
+                    ->color('danger')
+                    ->summarize([
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total')
+                            ->using(function () {
+                                return \App\Models\Deposit::with('depositPenalties')->get()
+                                    ->sum(fn($record) => $record->total_penalty_amount);
+                            })
+                            ->money('IDR')
+                    ]),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -54,20 +131,14 @@ class DepositResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                    Tables\Actions\ForceDeleteBulkAction::make(),
-                    Tables\Actions\RestoreBulkAction::make(),
-                ]),
             ]);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+            RelationManagers\DepositPenaltiesRelationManager::class,
+            RelationManagers\DepositFundsRelationManager::class,
         ];
     }
 
@@ -83,6 +154,7 @@ class DepositResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
+            ->with(['administrator.division', 'depositPenalties', 'depositFunds'])
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);

@@ -18,6 +18,6 @@ class FundSeeder extends Seeder
         \App\Models\Fund::create(['name' => 'Cash Nanay Kas']);
         \App\Models\Fund::create(['name' => 'Gopay HMIF Deposit']);
         \App\Models\Fund::create(['name' => 'Cash Nana Deposit']);
-        \App\Models\Fund::create(['name' => 'Cash Nana Deposit']);
+        \App\Models\Fund::create(['name' => 'Cash Nanay Deposit']);
     }
 }
