@@ -2,6 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Models\CashFund;
+use App\Models\DepositFund;
+use App\Models\Fund;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -109,8 +112,24 @@ class DivisionSeeder extends Seeder
         // Buat administrators
         foreach ($administrators as $adminData) {
             $admin = \App\Models\Administrator::create($adminData);
-            $admin->cash()->create();
-            $admin->deposit()->create();
+            $cash = $admin->cash()->create();
+            $deposit = $admin->deposit()->create();
+            $fundCash = Fund::where("slug", 'gopay-hmif-kas')->first();
+            $fundDeposit = Fund::where("slug", 'gopay-hmif-deposit')->first();
+            CashFund::create([
+                "cash_id" => $cash->id,
+                "fund_id" => $fundCash->id,
+                "amount" => 15000,
+                'penalty' => 0,
+                'month' => 'april',
+                'date' => now()->format('Y-m-d'),
+            ]);
+            DepositFund::create([
+                "deposit_id" => $deposit->id,
+                "fund_id" => $fundDeposit->id,
+                'date' => now()->format('Y-m-d'),
+                'amount' => 30000
+            ]);
         }
     }
 }

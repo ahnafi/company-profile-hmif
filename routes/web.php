@@ -1,11 +1,8 @@
 <?php
 
+use App\Http\Controllers\CashController;
+use App\Http\Controllers\DepositController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-// Route::get('/', function () {
-//     return Inertia::render('welcome');
-// })->name('home');
 
 // company profile
 Route::get('/', fn() => 'Halaman Utama');
@@ -20,15 +17,11 @@ Route::get('/database-if-bangga', fn() => 'Halaman Database IF Bangga');
 
 // keuangan
 Route::prefix('keuangan')->group(function () {
-    Route::get('/kas', fn() => 'Halaman Kas');
-    Route::get('/deposit', fn() => 'Halaman Deposit');
+    Route::get('/kas', [CashController::class, "index"])->name('cash.index');
+    Route::get('/kas/riwayat', [CashController::class, 'history'])->name('cash.history');
+    Route::get('/deposit', [DepositController::class, 'index'])->name("deposit.index");
+    Route::get('/deposit/riwayat', [DepositController::class, "history"])->name("deposit.history");
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
-});
-
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
+// require __DIR__.'/settings.php';
+// require __DIR__.'/auth.php';
