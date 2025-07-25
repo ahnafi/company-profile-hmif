@@ -18,24 +18,23 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class FinancePanelProvider extends PanelProvider
+class KreusFinancePanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('finance')
-            ->path('finance')
+            ->id('kreusFinance')
+            ->path('kreusFinance')
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->login()
-            ->discoverResources(in: app_path('Filament/Finance/Resources'), for: 'App\\Filament\\Finance\\Resources')
-            ->discoverPages(in: app_path('Filament/Finance/Pages'), for: 'App\\Filament\\Finance\\Pages')
+            ->discoverResources(in: app_path('Filament/KreusFinance/Resources'), for: 'App\\Filament\\KreusFinance\\Resources')
+            ->discoverPages(in: app_path('Filament/KreusFinance/Pages'), for: 'App\\Filament\\KreusFinance\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->collapsibleNavigationGroups(false)
-            ->discoverWidgets(in: app_path('Filament/Finance/Widgets'), for: 'App\\Filament\\Finance\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/KreusFinance/Widgets'), for: 'App\\Filament\\KreusFinance\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
             ])

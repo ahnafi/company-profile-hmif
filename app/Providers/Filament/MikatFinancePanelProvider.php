@@ -18,24 +18,23 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class FinancePanelProvider extends PanelProvider
+class MikatFinancePanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('finance')
-            ->path('finance')
+            ->id('mikatFinance')
+            ->path('mikatFinance')
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->login()
-            ->discoverResources(in: app_path('Filament/Finance/Resources'), for: 'App\\Filament\\Finance\\Resources')
-            ->discoverPages(in: app_path('Filament/Finance/Pages'), for: 'App\\Filament\\Finance\\Pages')
+            ->discoverResources(in: app_path('Filament/MikatFinance/Resources'), for: 'App\\Filament\\MikatFinance\\Resources')
+            ->discoverPages(in: app_path('Filament/MikatFinance/Pages'), for: 'App\\Filament\\MikatFinance\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->collapsibleNavigationGroups(false)
-            ->discoverWidgets(in: app_path('Filament/Finance/Widgets'), for: 'App\\Filament\\Finance\\Widgets')
+            ->login()
+            ->discoverWidgets(in: app_path('Filament/MikatFinance/Widgets'), for: 'App\\Filament\\MikatFinance\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
             ])

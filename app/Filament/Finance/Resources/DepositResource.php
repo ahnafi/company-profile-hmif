@@ -18,6 +18,7 @@ class DepositResource extends Resource
     protected static ?string $model = Deposit::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Kas dan Deposit';
 
     public static function form(Form $form): Form
     {

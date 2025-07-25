@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Filament\MikatFinance\Resources\MikatCashResource\Pages;
+
+use App\Filament\MikatFinance\Resources\MikatCashResource;
+use Filament\Actions;
+use Filament\Resources\Components\Tab;
+use Filament\Resources\Pages\ListRecords;
+use Illuminate\Database\Eloquent\Builder;
+
+class ListMikatCashes extends ListRecords
+{
+    protected static string $resource = MikatCashResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            Actions\CreateAction::make(),
+        ];
+    }
+
+    public function getTabs(): array
+    {
+        return [
+            'Tampilkan semua' => Tab::make(),
+            'Pemasukan' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('type', "income")),
+            'Pengeluaran' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('type', "expense")),
+            'Pengeluaran External' => Tab::make()
+                ->modifyQueryUsing(fn(Builder $query) => $query->where('type', "external_expense")),
+        ];
+    }
+}

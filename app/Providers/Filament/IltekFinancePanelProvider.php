@@ -18,24 +18,23 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
-class FinancePanelProvider extends PanelProvider
+class IltekFinancePanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id('finance')
-            ->path('finance')
+            ->id('iltekFinance')
+            ->path('iltekFinance')
             ->colors([
                 'primary' => Color::Amber,
             ])
             ->login()
-            ->discoverResources(in: app_path('Filament/Finance/Resources'), for: 'App\\Filament\\Finance\\Resources')
-            ->discoverPages(in: app_path('Filament/Finance/Pages'), for: 'App\\Filament\\Finance\\Pages')
+            ->discoverResources(in: app_path('Filament/IltekFinance/Resources'), for: 'App\\Filament\\IltekFinance\\Resources')
+            ->discoverPages(in: app_path('Filament/IltekFinance/Pages'), for: 'App\\Filament\\IltekFinance\\Pages')
             ->pages([
                 Pages\Dashboard::class,
             ])
-            ->collapsibleNavigationGroups(false)
-            ->discoverWidgets(in: app_path('Filament/Finance/Widgets'), for: 'App\\Filament\\Finance\\Widgets')
+            ->discoverWidgets(in: app_path('Filament/IltekFinance/Widgets'), for: 'App\\Filament\\IltekFinance\\Widgets')
             ->widgets([
                 Widgets\AccountWidget::class,
             ])
