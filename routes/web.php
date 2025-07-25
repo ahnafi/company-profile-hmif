@@ -17,8 +17,8 @@ Route::get('/database-if-bangga', fn() => 'Halaman Database IF Bangga');
 
 // keuangan
 Route::prefix('keuangan')->group(function () {
-    Route::get('/kas', [CashController::class, "index"])->name('cash.index');
-    Route::get('/kas/riwayat', [CashController::class, 'history'])->name('cash.history');
+    Route::get('/', [CashController::class, "index"])->name('cash.index');
+    Route::get('/riwayat', [CashController::class, 'history'])->name('cash.history');
     Route::get('/deposit', [DepositController::class, 'index'])->name("deposit.index");
     Route::get('/deposit/riwayat', [DepositController::class, "history"])->name("deposit.history");
 });
