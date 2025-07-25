@@ -1,5 +1,5 @@
 <nav class="bg-white border-b px-4 py-2 flex items-center justify-between">
-    <div class="text-lg font-semibold">KasApp</div>
+    <div class="text-lg font-semibold">Keuangan HMIF</div>
     <button class="md:hidden block text-gray-700" onclick="document.getElementById('nav-menu').classList.toggle('hidden')">
         &#9776;
     </button>
