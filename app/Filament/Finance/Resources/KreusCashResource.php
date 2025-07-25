@@ -1,0 +1,241 @@
+<?php
+
+namespace App\Filament\Finance\Resources;
+
+use App\Filament\Finance\Resources\KreusCashResource\Pages;
+use App\Filament\Finance\Resources\KreusCashResource\RelationManagers;
+use App\Models\KreusCash;
+use Filament\Forms;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+
+class KreusCashResource extends Resource
+{
+    protected static ?string $model = KreusCash::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationGroup = 'Kas Kreus';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\Select::make('administrator_id')
+                    ->label('Administrator')
+                    ->relationship('administrator', 'name', fn (Builder $query) => 
+                        $query->whereHas('division', fn (Builder $query) => 
+                            $query->where('slug', 'kreasi-dan-usaha')
+                        )
+                    )
+                    ->required(),
+                Forms\Components\DatePicker::make('date')
+                    ->label('Tanggal')
+                    ->required(),
+                Forms\Components\TextInput::make('work_program')
+                    ->label('Program Kerja')
+                    ->required(),
+                Forms\Components\Select::make('type')
+                    ->label('Jenis Transaksi')
+                    ->options([
+                        'income' => 'Pemasukan',
+                        'expense' => 'Pengeluaran',
+                        'external_expense' => 'Pengeluaran Eksternal'
+                    ])
+                    ->required(),
+                Forms\Components\TextInput::make('source_fund')
+                    ->label('Sumber Dana')
+                    ->required(),
+                Forms\Components\TextInput::make('amount')
+                    ->label('Jumlah')
+                    ->numeric()
+                    ->prefix('Rp')
+                    ->required(),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('administrator.name')
+                    ->label('Administrator')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('date')
+                    ->label('Tanggal')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('work_program')
+                    ->label('Program Kerja')
+                    ->searchable()
+                    ->wrap(),
+                Tables\Columns\TextColumn::make('type')
+                    ->label('Jenis')
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'income' => 'Pemasukan',
+                        'expense' => 'Pengeluaran',
+                        'external_expense' => 'Pengeluaran Eksternal',
+                        default => $state,
+                    })
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'income' => 'success',
+                        'expense' => 'warning',
+                        'external_expense' => 'danger',
+                        default => 'gray',
+                    })
+                    ->searchable()
+                    ->summarize([
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total Pemasukan')
+                            ->using(function () {
+                                return \App\Models\KreusCash::where('type', 'income')->count() . ' transaksi';
+                            }),
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total Pengeluaran')
+                            ->using(function () {
+                                return \App\Models\KreusCash::where('type', 'expense')->count() . ' transaksi';
+                            }),
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total Pengeluaran Eksternal')
+                            ->using(function () {
+                                return \App\Models\KreusCash::where('type', 'external_expense')->count() . ' transaksi';
+                            }),
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total Semua Transaksi')
+                            ->using(function () {
+                                return \App\Models\KreusCash::count() . ' transaksi';
+                            }),
+                    ]),
+                Tables\Columns\TextColumn::make('source_fund')
+                    ->label('Sumber Dana')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('amount')
+                    ->label('Jumlah')
+                    ->money('IDR')
+                    ->color(fn ($record): string => match ($record->type) {
+                        'income' => 'success',
+                        'expense' => 'warning',
+                        'external_expense' => 'danger',
+                        default => 'gray',
+                    })
+                    ->sortable()
+                    ->summarize([
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total Pemasukan')
+                            ->using(function () {
+                                return \App\Models\KreusCash::where('type', 'income')->sum('amount');
+                            })
+                            ->money('IDR'),
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total Pengeluaran')
+                            ->using(function () {
+                                return \App\Models\KreusCash::where('type', 'expense')->sum('amount');
+                            })
+                            ->money('IDR'),
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Total Pengeluaran Eksternal')
+                            ->using(function () {
+                                return \App\Models\KreusCash::where('type', 'external_expense')->sum('amount');
+                            })
+                            ->money('IDR'),
+                        Tables\Columns\Summarizers\Summarizer::make()
+                            ->label('Saldo Bersih')
+                            ->using(function () {
+                                $income = \App\Models\KreusCash::where('type', 'income')->sum('amount');
+                                $expense = \App\Models\KreusCash::where('type', 'expense')->sum('amount');
+                                $externalExpense = \App\Models\KreusCash::where('type', 'external_expense')->sum('amount');
+                                return $income - $expense - $externalExpense;
+                            })
+                            ->money('IDR'),
+                    ]),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('updated_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('deleted_at')
+                    ->dateTime()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+            ])
+            ->filters([
+                Tables\Filters\TrashedFilter::make(),
+                Tables\Filters\SelectFilter::make('type')
+                    ->label('Jenis Transaksi')
+                    ->options([
+                        'income' => 'Pemasukan',
+                        'expense' => 'Pengeluaran',
+                        'external_expense' => 'Pengeluaran Eksternal',
+                    ]),
+                Tables\Filters\SelectFilter::make('administrator')
+                    ->label('Administrator')
+                    ->relationship('administrator', 'name', fn (Builder $query) => 
+                        $query->whereHas('division', fn (Builder $query) => 
+                            $query->where('slug', 'kreativitas-dan-usaha')
+                        )
+                    ),
+                Tables\Filters\Filter::make('date')
+                    ->form([
+                        Forms\Components\DatePicker::make('from')
+                            ->label('Dari Tanggal'),
+                        Forms\Components\DatePicker::make('until')
+                            ->label('Sampai Tanggal'),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '>=', $date),
+                            )
+                            ->when(
+                                $data['until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('date', '<=', $date),
+                            );
+                    }),
+            ])
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListKreusCashes::route('/'),
+            'create' => Pages\CreateKreusCash::route('/create'),
+            'edit' => Pages\EditKreusCash::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->with(['administrator.division'])
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+}

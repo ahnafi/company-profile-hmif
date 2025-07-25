@@ -10,10 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('divisions', function (Blueprint $table) {
+        Schema::create('iltek_cashes', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string("slug");
+            $table->foreignId("administrator_id")->constrained()->cascadeOnDelete();
+            $table->date("date");
+            $table->string("work_program");
+            $table->enum("type", ['income', 'expense', 'external_expense']);
+            $table->string("source_fund");
+            $table->integer("amount")->default(0);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -24,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('divisions');
+        Schema::dropIfExists('iltek_cashes');
     }
 };

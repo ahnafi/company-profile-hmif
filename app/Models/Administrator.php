@@ -43,4 +43,28 @@ class Administrator extends Model
         return $this->hasOne(Cash::class);
     }
 
+    /**
+     * Ilteks cash
+     */
+    public function iltekCash(): HasMany
+    {
+        return $this->hasMany(IltekCash::class);
+    }
+
+    /**
+     * Ilteks cash
+     */
+    public function kreusCash(): HasMany
+    {
+        return $this->hasMany(KreusCash::class);
+    }
+
+    /**
+     * Ilteks cash
+     */
+    public function mikatCash(): HasMany
+    {
+        return $this->hasMany(MikatCash::class);
+    }
+
 }
