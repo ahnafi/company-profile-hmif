@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\DepositController;
+use App\Http\Controllers\FormController;
 use Illuminate\Support\Facades\Route;
 
 // company profile
@@ -21,6 +22,12 @@ Route::prefix('keuangan')->group(function () {
     Route::get('/riwayat', [CashController::class, 'history'])->name('cash.history');
     Route::get('/deposit', [DepositController::class, 'index'])->name("deposit.index");
     Route::get('/deposit/riwayat', [DepositController::class, "history"])->name("deposit.history");
+});
+
+// Form Builder Routes
+Route::prefix('forms')->group(function () {
+    Route::get('/{slug}', [FormController::class, 'show'])->name('forms.show');
+    Route::post('/{slug}/submit', [FormController::class, 'submit'])->name('forms.submit');
 });
 
 // require __DIR__.'/settings.php';
