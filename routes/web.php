@@ -3,12 +3,13 @@
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\FormController;
+use App\Http\Controllers\LecturerController;
 use Illuminate\Support\Facades\Route;
 
 // company profile
 Route::get('/', fn() => 'Halaman Utama');
 Route::get('/berita', fn() => 'Halaman Berita / Artikel');
-Route::get('/dosen', fn() => 'Halaman Dosen Informatika');
+Route::get('/dosen', [LecturerController::class, 'index'])->name("lecturer");
 Route::get('/unduhan', fn() => 'Halaman Unduhan (Dokumen dan Formulir Penting)');
 Route::get('/imagz', fn() => 'Halaman Imagz (Magazine)');
 Route::get('/struktur-organisasi', fn() => 'Halaman Struktur Organisasi');
