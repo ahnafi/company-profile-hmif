@@ -1,21 +1,54 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CashController;
 use App\Http\Controllers\DepositController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\LecturerController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\StudentAchievementController;
+use App\Http\Controllers\CompanyProfileController;
+use App\Http\Controllers\DownloadableController;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\IMagzController;
+use App\Http\Controllers\ArticleController;
 
-// company profile
-Route::get('/', fn() => 'Halaman Utama');
-Route::get('/berita', fn() => 'Halaman Berita / Artikel');
-Route::get('/dosen', [LecturerController::class, 'index'])->name("lecturer");
-Route::get('/unduhan', fn() => 'Halaman Unduhan (Dokumen dan Formulir Penting)');
-Route::get('/imagz', fn() => 'Halaman Imagz (Magazine)');
-Route::get('/struktur-organisasi', fn() => 'Halaman Struktur Organisasi');
-Route::get('/proker-divisi', fn() => 'Halaman Program Kerja Divisi');
-Route::get('/visi-misi', fn() => 'Halaman Visi dan Misi');
-Route::get('/database-if-bangga', fn() => 'Halaman Database IF Bangga');
+// Company Profile
+Route::controller(CompanyProfileController::class)->group(function () {
+    Route::get('/', fn() => 'Halaman Utama');
+    Route::get('/visi-misi', fn() => 'Halaman Visi dan Misi');
+});
+
+// Blog, News, and Articles
+Route::controller(ArticleController::class)->group(function () {
+    Route::get('/berita', fn() => 'Halaman Berita / Artikel');
+});
+
+// Lecturer
+Route::controller(LecturerController::class)->group(function () {
+    Route::get('/dosen','index')->name("lecturer");
+});
+
+// Downloadable
+Route::controller(DownloadableController::class)->group(function () {
+    Route::get('/unduhan', fn() => 'Halaman Unduhan (Dokumen dan Formulir Penting)');
+});
+
+// I-Magz
+Route::controller(IMagzController::class)->group(function () {
+    Route::get('/imagz', fn() => 'Halaman Imagz (Magazine)');
+});
+
+// Organisasi
+Route::controller(OrganizationController::class)->group(function () {
+    Route::get('/struktur-organisasi', fn() => 'Halaman Struktur Organisasi');
+    Route::get('/proker-divisi', fn() => 'Halaman Program Kerja Divisi');
+    Route::get('proker-divisi/{slug}', fn($slug) => "Halaman Program Kerja Divisi: $slug");
+});
+
+// IF Bangga
+Route::controller(StudentAchievementController::class)->group(function () {
+    Route::get('/database-if-bangga', fn() => 'Halaman Database IF Bangga');
+});
 
 // keuangan
 Route::prefix('keuangan')->group(function () {
