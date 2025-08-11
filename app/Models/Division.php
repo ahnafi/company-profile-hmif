@@ -32,4 +32,8 @@ class Division extends Model
         return $this->hasMany(Administrator::class);
     }
 
+    public function workPrograms(): HasMany
+    {
+        return $this->hasMany(WorkProgram::class);
+    }
 }
