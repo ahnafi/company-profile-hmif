@@ -430,8 +430,8 @@ class ComputerEngineering2024Seeder extends Seeder
             ],
         ];
 
-        foreach ($students as $studentData) {
-            Student::create($studentData);
+        foreach ($students as $student) {
+            Student::create($student);
         }
     }
 }
