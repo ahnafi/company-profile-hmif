@@ -47,7 +47,7 @@ Route::controller(OrganizationController::class)->group(function () {
 
 // IF Bangga
 Route::controller(StudentAchievementController::class)->group(function () {
-    Route::get('/database-if-bangga', fn() => 'Halaman Database IF Bangga');
+    Route::get('/if-bangga', 'index')->name('student.achievements.index');
 });
 
 // keuangan
