@@ -16,7 +16,15 @@ class DatabaseSeeder extends Seeder
         $this->call([
             FundSeeder::class,
             DivisionSeeder::class,
-            RoleAndPermissionSeeder::class
+            RoleAndPermissionSeeder::class,
+            Informatics2021Seeder::class,
+            Informatics2022Seeder::class,
+            Informatics2023Seeder::class,
+            Informatics2024Seeder::class,
+            Informatics2025Seeder::class,
+            ComputerEngineering2024Seeder::class,
+            ComputerEngineering2025Seeder::class,
+            AchievementSeeder::class,
         ]);
     }
 }
