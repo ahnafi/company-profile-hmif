@@ -1,4 +1,4 @@
-@extends('layout.finance')
+@extends('financeLayout.finance')
 
 @section('title', 'Deposit Pengurus HMIF')
 @section('content')
