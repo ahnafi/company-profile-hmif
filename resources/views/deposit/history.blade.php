@@ -1,4 +1,4 @@
-@extends('layout.finance')
+@extends('financeLayout.finance')
 
 @section('title', 'Riwayat deposit pengurus HMIF')
 @section('content')
