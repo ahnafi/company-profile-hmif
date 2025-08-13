@@ -7,7 +7,7 @@
     @vite(['resources/css/app.css', "resources/js/app.tsx"])
 </head>
 <body>
-@include('layout.navbar')
+@include('financeLayout.Navbar')
 @yield('content')
 </body>
 </html>
