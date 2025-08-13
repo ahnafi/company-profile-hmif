@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('nim')->unique();
-            $table->enum('study_program', ['informatic', 'computer_engineering']);
+            $table->string('image')->nullable();
+            $table->enum('study_program', ['informatics', 'computer_engineering']);
             $table->string('batch_year');
             $table->timestamps();
         });
