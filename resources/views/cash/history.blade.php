@@ -1,4 +1,4 @@
-@extends('layout.finance')
+@extends('financeLayout.finance')
 
 @section('title', 'Riwayat Kas HMIF')
 @section('content')
