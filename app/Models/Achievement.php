@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\DB;
 
 class Achievement extends Model
 {
@@ -14,6 +16,9 @@ class Achievement extends Model
         'name',
         'description',
         'image',
+        'proof',
+        'awarded_at',
+        'approval',
         'achievement_type_id',
         'achievement_category_id',
         'achievement_level_id',
@@ -34,8 +39,10 @@ class Achievement extends Model
         return $this->belongsTo(AchievementLevel::class);
     }
 
-    public function student(): HasMany
+    public function students(): BelongsToMany
     {
-        return $this->hasMany(Student::class);
+        return $this->belongsToMany(Student::class, 'student_achievements', 'achievement_id', 'student_id')
+            ->select('students.id as student_id', 'students.name as student_name', 'students.nim', 'students.study_program', 'students.batch_year');
     }
+
 }
