@@ -48,6 +48,8 @@ Route::controller(OrganizationController::class)->group(function () {
 // IF Bangga
 Route::controller(StudentAchievementController::class)->group(function () {
     Route::get('/if-bangga', 'index')->name('student.achievements.index');
+    Route::get('/if-bangga/formulir', 'form')->name('student.achievements.form');
+    Route::post('/if-bangga', 'create')->name('student.achievements.create');
 });
 
 // keuangan
