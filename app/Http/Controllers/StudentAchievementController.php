@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AchievementFilterRequest;
+use App\Http\Requests\AchievementFormRequest;
 use Illuminate\Http\Request;
 use App\Models\Achievement;
 use App\Models\Student;
 use App\Models\AchievementCategory;
 use App\Models\AchievementLevel;
 use App\Models\AchievementType;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class StudentAchievementController extends Controller
 {
@@ -89,11 +93,79 @@ class StudentAchievementController extends Controller
             ]);
         }
 
-        public function achievementForm()
+        public function form()
         {
+            $types = AchievementType::select('id', 'name')->get();
+            $categories = AchievementCategory::select('id', 'name')->get();
+            $levels = AchievementLevel::select('id', 'name')->get();
+
+            return view('achievements.form', [
+                'types'       => $types,
+                'categories'  => $categories,
+                'levels'      => $levels,
+            ]);
         }
 
-        public function storeAchievement(Request $request)
-        {
+    public function create(AchievementFormRequest $request)
+    {
+        $validated = $request->validated();
+
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imageName = time() . '_' . Str::slug($validated['name']) . '_' . uniqid() . '.' .
+                $request->file('image')->extension();
+            $stored = $request->file('image')->storeAs('achievement_images', $imageName, 'public');
+            $imagePath = $stored;
         }
+
+        $proofPath = null;
+        if ($request->hasFile('proof')) {
+            $proofName = time() . '_' . Str::slug($validated['name']) . '_' . uniqid() . '.' .
+                $request->file('proof')->extension();
+            $stored = $request->file('proof')->storeAs('achievement_proofs', $proofName, 'public');
+            $proofPath = $stored;
+        }
+
+        DB::beginTransaction();
+
+        try {
+            $achievement = Achievement::create([
+                'achievement_type_id'     => $validated['type_id'],
+                'achievement_category_id' => $validated['category_id'],
+                'achievement_level_id'    => $validated['level_id'],
+                'name'                    => $validated['name'],
+                'description'             => $validated['description'],
+                'awarded_at'              => $validated['awarded_at'],
+                'image'                   => $imagePath,
+                'proof'                   => $proofPath,
+                'approval'                => false,
+            ]);
+
+            $studentIds = Student::whereIn('nim', $validated['nim'])->pluck('id')->all();
+            if (!empty($studentIds)) {
+                $achievement->students()->syncWithoutDetaching($studentIds);
+            }
+
+            DB::commit();
+
+            return redirect()
+                ->route('student.achievements.index')
+                ->with('success', 'Prestasi berhasil ditambahkan dan menunggu persetujuan.');
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            if ($imagePath) {
+                Storage::delete('public/' . $imagePath);
+            }
+            if ($proofPath) {
+                Storage::delete('public/' . $proofPath);
+            }
+
+            report($e);
+
+            return back()
+                ->withInput()
+                ->withErrors(['general' => 'Terjadi kesalahan saat menyimpan prestasi. Silakan coba lagi.']);
+        }
+    }
 }
