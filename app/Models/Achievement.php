@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class Achievement extends Model
 {
+    use SoftDeletes;
     protected $table = 'achievements';
 
     protected $fillable = [
@@ -41,8 +43,8 @@ class Achievement extends Model
 
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class, 'student_achievements', 'achievement_id', 'student_id')
-            ->select('students.id as student_id', 'students.name as student_name', 'students.nim', 'students.study_program', 'students.batch_year');
+        return $this->belongsToMany(Student::class, 'achievement_student', 'achievement_id', 'student_id')
+            ->withTimestamps();
     }
 
 }

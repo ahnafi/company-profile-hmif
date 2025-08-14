@@ -18,11 +18,12 @@ return new class extends Migration
             $table->text('image');
             $table->text('proof')->nullable();
             $table->date('awarded_at')->nullable();
-            $table->boolean('approval')->default(false);
+            $table->boolean('approval')->nullable()->default(null);
             $table->foreignId('achievement_type_id')->constrained('achievement_types');
             $table->foreignId('achievement_category_id')->constrained('achievement_categories');
             $table->foreignId('achievement_level_id')->constrained('achievement_levels');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

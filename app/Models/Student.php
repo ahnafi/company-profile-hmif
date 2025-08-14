@@ -22,8 +22,7 @@ class Student extends Model
 
     public function achievements(): BelongsToMany
     {
-        return $this->belongsToMany(Achievement::class, 'student_achievements', 'student_id', 'achievement_id')
-            ->select('students.id as student_id', 'students.name as student_name', 'students.nim', 'students.study_program', 'students.batch_year');
-
+        return $this->belongsToMany(Achievement::class, 'achievement_student', 'student_id', 'achievement_id')
+            ->withTimestamps();
     }
 }
