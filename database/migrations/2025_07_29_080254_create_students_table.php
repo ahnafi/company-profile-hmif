@@ -19,8 +19,9 @@ return new class extends Migration
             $table->enum('study_program', ['informatics', 'computer_engineering']);
             $table->string('batch_year');
             $table->timestamps();
+            $table->softDeletes();
         });
-    }
+    }   
 
     /**
      * Reverse the migrations.
