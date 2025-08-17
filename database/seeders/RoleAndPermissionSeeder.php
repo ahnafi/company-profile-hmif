@@ -24,6 +24,7 @@ class RoleAndPermissionSeeder extends Seeder
         Role::create(['name' => 'kreus']);
         Role::create(['name' => 'iltek']);
         Role::create(['name' => 'mikat']);
+        Role::create(['name' => 'ifbangga']);
 
         $admin = User::create([
            "name" => "Admin",
@@ -65,6 +66,14 @@ class RoleAndPermissionSeeder extends Seeder
             'email_verified_at' => now()
         ]);
         $mikatUser->assignRole("mikat");
+
+        $ifbanggaUser = User::create([
+            "name" => "Database IF Bangga",
+            "email" => "ifbangga@example.com",
+            "password" => Hash::make("password"),
+            'email_verified_at' => now()
+        ]);
+        $ifbanggaUser->assignRole("ifbangga");
 
     }
 }
