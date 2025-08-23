@@ -67,4 +67,9 @@ class Administrator extends Model
         return $this->hasMany(MikatCash::class);
     }
 
+    public function WorkProgramAdministrator(): HasMany
+    {
+        return $this->hasMany(Administrator::class);
+    }
+
 }
