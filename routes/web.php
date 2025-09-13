@@ -14,7 +14,7 @@ use App\Http\Controllers\ArticleController;
 
 // Company Profile
 Route::controller(CompanyProfileController::class)->group(function () {
-    Route::get('/', fn() => 'Halaman Utama');
+    Route::get('/', fn() => inertia('welcome'))->name('home');
     Route::get('/visi-misi', fn() => 'Halaman Visi dan Misi');
 });
 
