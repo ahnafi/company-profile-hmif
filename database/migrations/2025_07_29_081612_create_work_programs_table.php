@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description')->nullable();
+            $table->enum('type', ['work_program', 'work_agenda'])->default('work_program');
             $table->json('images')->nullable();
             $table->foreignId('division_id')->constrained('divisions');
             $table->timestamps();

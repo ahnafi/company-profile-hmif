@@ -25,6 +25,8 @@ class FinancePanelProvider extends PanelProvider
         return $panel
             ->id('finance')
             ->path('finance')
+            ->favicon(asset('logo.svg'))
+            ->brandLogo(asset('logo.svg'))
             ->colors([
                 'primary' => Color::Amber,
             ])

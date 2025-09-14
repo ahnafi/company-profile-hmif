@@ -25,7 +25,15 @@ class DatabaseSeeder extends Seeder
             ComputerEngineering2024Seeder::class,
             ComputerEngineering2025Seeder::class,
             AchievementSeeder::class,
-            LecturerSeeder::class
+            LecturerSeeder::class,
+            ArticleSeeder::class,
+            BPHWorkProgramSeeder::class,
+            EdukasiWorkProgramSeeder::class,
+            HumasWorkProgramSeeder::class,
+            IltekWorkProgramSeeder::class,
+            KreusWorkProgramSeeder::class,
+            MedkominfoWorkProgramSeeder::class,
+            MikatWorkProgramSeeder::class
         ]);
     }
 }
