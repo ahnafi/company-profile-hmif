@@ -25,6 +25,7 @@ class LecturerResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('image')
+                    ->directory('lecturer-images')
                     ->image()
                     ->columnSpanFull()
                     ->required(),

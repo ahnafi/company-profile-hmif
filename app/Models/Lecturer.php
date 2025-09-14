@@ -12,6 +12,6 @@ class Lecturer extends Model
         "name",
         "nip",
         "image",
-        "type"
+        "type" // "informatics", "computer_engineering"
     ];
 }

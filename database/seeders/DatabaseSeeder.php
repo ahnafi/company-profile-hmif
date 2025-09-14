@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             ComputerEngineering2024Seeder::class,
             ComputerEngineering2025Seeder::class,
             AchievementSeeder::class,
+            LecturerSeeder::class
         ]);
     }
 }
