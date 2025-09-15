@@ -40,7 +40,9 @@ Route::controller(IMagzController::class)->group(function () {
 
 // Organisasi
 Route::controller(OrganizationController::class)->group(function () {
-    Route::get('/struktur-organisasi', fn() => 'Halaman Struktur Organisasi');
+    Route::get('/struktur-organisasi', function () {
+        return inertia('about-hmif/organization-structure');
+    })->name('organization.structure');
     Route::get('/proker-divisi', fn() => 'Halaman Program Kerja Divisi');
     Route::get('proker-divisi/{slug}', fn($slug) => "Halaman Program Kerja Divisi: $slug");
 });
