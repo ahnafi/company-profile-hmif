@@ -20,7 +20,7 @@ Route::controller(CompanyProfileController::class)->group(function () {
 
 // Blog, News, and Articles
 Route::controller(ArticleController::class)->group(function () {
-    Route::get('/berita', fn() => 'Halaman Berita / Artikel');
+    Route::get('/berita', 'index')->name('articles.index');
 });
 
 // Lecturer
