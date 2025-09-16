@@ -32,7 +32,7 @@ Route::controller(LecturerController::class)->group(function () {
 
 // Downloadable
 Route::controller(DownloadableController::class)->group(function () {
-    Route::get('/unduhan', fn() => 'Halaman Unduhan (Dokumen dan Formulir Penting)');
+    Route::get('/unduhan', fn() => inertia('download'))->name('download');
 });
 
 // I-Magz

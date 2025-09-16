@@ -42,7 +42,7 @@ const navigation = [
     },
     {
         title: 'Jutif',
-        path: '/jutif',
+        path: 'https://jutif.if.unsoed.ac.id/index.php/jurnal',
     },
 ];
 

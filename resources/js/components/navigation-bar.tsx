@@ -66,7 +66,8 @@ export default function NavigationBar() {
         setIsDarkMode((prevMode) => !prevMode);
     };
 
-    const handleDropdownToggle = (index) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const handleDropdownToggle = (index: any) => {
         setActiveDropdown(activeDropdown === index ? null : index);
     };
 
@@ -121,21 +122,36 @@ export default function NavigationBar() {
                         {navigation.map((route, index) => (
                             <li key={index} className="relative">
                                 {route.path ? (
-                                    // Regular menu item
-                                    <Link
-                                        href={route.path}
-                                        className={`block rounded px-3 py-2 transition-colors duration-200 ${
-                                            route.title === 'Gabung Discord'
-                                                ? 'gradient-to-r bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary text-light-base'
-                                                : isActiveRoute(route)
-                                                  ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
-                                                  : 'hover:bg-gray-100 dark:hover:bg-gray-700'
-                                        }`}
-                                    >
-                                        {route.title}
-                                    </Link>
+                                    route.path.startsWith('http') || route.path.startsWith('https') ? (
+                                        <a
+                                            href={route.path}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className={`block rounded px-3 py-2 transition-colors duration-200 ${
+                                                route.title === 'Jutif'
+                                                    ? 'gradient-to-r bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary text-light-base'
+                                                    : isActiveRoute(route)
+                                                      ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
+                                                      : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                                            }`}
+                                        >
+                                            {route.title}
+                                        </a>
+                                    ) : (
+                                        <Link
+                                            href={route.path}
+                                            className={`block rounded px-3 py-2 transition-colors duration-200 ${
+                                                route.title === 'Jutif'
+                                                    ? 'gradient-to-r bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary text-light-base'
+                                                    : isActiveRoute(route)
+                                                      ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
+                                                      : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                                            }`}
+                                        >
+                                            {route.title}
+                                        </Link>
+                                    )
                                 ) : (
-                                    // Dropdown menu item
                                     <div className="relative">
                                         <button
                                             onClick={(e) => {
