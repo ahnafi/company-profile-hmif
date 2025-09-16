@@ -8,8 +8,8 @@ const navigation = [
         path: '/berita',
     },
     {
-        title: 'Tenaga Kerja',
-        path: '/tenaga-kerja',
+        title: 'Dosen',
+        path: '/dosen',
     },
     {
         title: 'Tentang HMIF',

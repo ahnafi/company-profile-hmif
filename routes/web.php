@@ -15,7 +15,7 @@ use App\Http\Controllers\ArticleController;
 // Company Profile
 Route::controller(CompanyProfileController::class)->group(function () {
     Route::get('/', fn() => inertia('welcome'))->name('home');
-    Route::get('/visi-misi', fn() => 'Halaman Visi dan Misi');
+    Route::get('/visi-misi', fn() => inertia('about-hmif/vision-mission'))->name('vision.mission');
 });
 
 // Blog, News, and Articles
@@ -25,7 +25,9 @@ Route::controller(ArticleController::class)->group(function () {
 
 // Lecturer
 Route::controller(LecturerController::class)->group(function () {
-    Route::get('/dosen','index')->name("lecturer");
+    Route::get('/dosen', function () {
+        return inertia('lecturers');
+    })->name("lecturer");
 });
 
 // Downloadable
