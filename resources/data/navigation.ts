@@ -24,7 +24,7 @@ const navigation = [
             },
             {
                 title: 'Program Kerja',
-                path: '/program-kerja',
+                path: '/proker-divisi',
             },
         ],
     },

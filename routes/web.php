@@ -25,9 +25,7 @@ Route::controller(ArticleController::class)->group(function () {
 
 // Lecturer
 Route::controller(LecturerController::class)->group(function () {
-    Route::get('/dosen', function () {
-        return inertia('lecturers');
-    })->name("lecturer");
+    Route::get('/dosen', "index")->name("lecturer");
 });
 
 // Downloadable
@@ -45,8 +43,8 @@ Route::controller(OrganizationController::class)->group(function () {
     Route::get('/struktur-organisasi', function () {
         return inertia('about-hmif/organization-structure');
     })->name('organization.structure');
-    Route::get('/proker-divisi', fn() => 'Halaman Program Kerja Divisi');
-    Route::get('proker-divisi/{slug}', fn($slug) => "Halaman Program Kerja Divisi: $slug");
+    Route::get('/proker-divisi', 'workPrograms')->name('work-program.index');
+    Route::get('proker-divisi/{workProgram}', 'detailWorkProgram')->name('work-program.show');
 });
 
 // IF Bangga

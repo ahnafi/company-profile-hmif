@@ -20,52 +20,7 @@ interface LaborProps {
     lecturers: Lecturer[];
 }
 
-// Data dummy - ganti dengan data dari props
-const dummyLecturers: Lecturer[] = [
-    {
-        id: 1,
-        name: 'Prof. Dr. Ahmad Santoso, M.Kom',
-        nip: '196801011990031001',
-        image: '/img/lecturers/lecturer1.jpg',
-        type: 'informatics',
-    },
-    {
-        id: 2,
-        name: 'Dr. Siti Rahmatun, S.Kom, M.T',
-        nip: '197205122000032001',
-        image: '/img/lecturers/lecturer2.jpg',
-        type: 'informatics',
-    },
-    {
-        id: 3,
-        name: 'Budi Prasetyo, S.T, M.Eng',
-        nip: '198003151999031002',
-        image: '/img/lecturers/lecturer3.jpg',
-        type: 'computer_engineering',
-    },
-    {
-        id: 4,
-        name: 'Dr. Eng. Maria Ulfah, S.Kom, M.Kom',
-        nip: '197808232001122001',
-        image: '/img/lecturers/lecturer4.jpg',
-        type: 'informatics',
-    },
-    {
-        id: 5,
-        name: 'Prof. Ir. Andi Wijaya, M.T, Ph.D',
-        nip: '196512101989031001',
-        type: 'computer_engineering',
-    },
-    {
-        id: 6,
-        name: 'Dra. Nur Aini, M.Kom',
-        nip: '197401152000032002',
-        image: '/img/lecturers/lecturer6.jpg',
-        type: 'informatics',
-    },
-];
-
-export default function Labor({ lecturers = dummyLecturers }: LaborProps) {
+export default function Labor({ lecturers }: LaborProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedType, setSelectedType] = useState<'all' | 'informatics' | 'computer_engineering'>('all');
 
@@ -250,38 +205,37 @@ export default function Labor({ lecturers = dummyLecturers }: LaborProps) {
                                                         whileInView={{ opacity: 1, y: 0 }}
                                                         viewport={{ once: true }}
                                                         transition={{ duration: 0.6, delay: index * 0.1 }}
-                                                        className="group rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                                                        className="group flex flex-col items-center rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
                                                     >
-                                                        <div className="flex items-start gap-4">
-                                                            <div className="flex-shrink-0">
-                                                                {lecturer.image ? (
-                                                                    <Avatar>
-                                                                        <AvatarImage
-                                                                            src={lecturer.image}
-                                                                            alt={lecturer.name}
-                                                                            className="object-cover"
-                                                                        />
-                                                                        <AvatarFallback className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary font-semibold text-white">
-                                                                            {getInitials(lecturer.name)}
-                                                                        </AvatarFallback>
-                                                                    </Avatar>
-                                                                ) : (
-                                                                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary font-semibold text-white">
+                                                        {/* Gambar di tengah atas */}
+                                                        <div className="mb-4 flex justify-center">
+                                                            {lecturer.image ? (
+                                                                <Avatar className="h-24 w-24">
+                                                                    <AvatarImage
+                                                                        src={`/storage/${lecturer.image}`}
+                                                                        alt={lecturer.name}
+                                                                        className="h-full w-full rounded-full object-cover"
+                                                                    />
+                                                                    <AvatarFallback className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary font-semibold text-white">
                                                                         {getInitials(lecturer.name)}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                            <div className="min-w-0 flex-1">
-                                                                <h3 className="mb-1 font-semibold text-dark-base transition-colors duration-300 group-hover:text-blue-imphnen-base dark:text-light-base">
-                                                                    {lecturer.name}
-                                                                </h3>
-                                                                <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">NIP: {lecturer.nip}</p>
-                                                                <div className="flex items-center gap-2">
-                                                                    <span className="rounded-full bg-blue-imphnen-base/10 px-2 py-1 text-xs font-medium text-blue-imphnen-base">
-                                                                        {typeLabels[lecturer.type]}
-                                                                    </span>
+                                                                    </AvatarFallback>
+                                                                </Avatar>
+                                                            ) : (
+                                                                <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary font-semibold text-white">
+                                                                    {getInitials(lecturer.name)}
                                                                 </div>
-                                                            </div>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Konten teks */}
+                                                        <div className="text-center">
+                                                            <h3 className="mb-1 font-semibold text-dark-base transition-colors duration-300 group-hover:text-blue-imphnen-base dark:text-light-base">
+                                                                {lecturer.name}
+                                                            </h3>
+                                                            <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">NIP: {lecturer.nip}</p>
+                                                            <span className="inline-block rounded-full bg-blue-imphnen-base/10 px-2 py-1 text-xs font-medium text-blue-imphnen-base">
+                                                                {typeLabels[lecturer.type]}
+                                                            </span>
                                                         </div>
                                                     </motion.div>
                                                 ))}
@@ -310,36 +264,40 @@ export default function Labor({ lecturers = dummyLecturers }: LaborProps) {
                                         <motion.div
                                             key={lecturer.id}
                                             initial={{ opacity: 0, y: 30 }}
-                                            animate={{ opacity: 1, y: 0 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            viewport={{ once: true }}
                                             transition={{ duration: 0.6, delay: index * 0.1 }}
-                                            className="group rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                                            className="group flex flex-col items-center rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
                                         >
-                                            <div className="flex items-start gap-4">
-                                                <div className="flex-shrink-0">
-                                                    {lecturer.image ? (
-                                                        <Avatar>
-                                                            <AvatarImage src={lecturer.image} alt={lecturer.name} className="object-cover" />
-                                                            <AvatarFallback className="flex h-full w-full items-center justify-center bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary font-semibold text-white">
-                                                                {getInitials(lecturer.name)}
-                                                            </AvatarFallback>
-                                                        </Avatar>
-                                                    ) : (
-                                                        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary font-semibold text-white">
+                                            {/* Gambar di tengah atas */}
+                                            <div className="mb-4 flex justify-center">
+                                                {lecturer.image ? (
+                                                    <Avatar className="h-24 w-24">
+                                                        <AvatarImage
+                                                            src={`/storage/${lecturer.image}`}
+                                                            alt={lecturer.name}
+                                                            className="h-full w-full rounded-full object-cover"
+                                                        />
+                                                        <AvatarFallback className="flex h-full w-full items-center justify-center rounded-full bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary font-semibold text-white">
                                                             {getInitials(lecturer.name)}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                                <div className="min-w-0 flex-1">
-                                                    <h3 className="mb-1 font-semibold text-dark-base transition-colors duration-300 group-hover:text-blue-imphnen-base dark:text-light-base">
-                                                        {lecturer.name}
-                                                    </h3>
-                                                    <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">NIP: {lecturer.nip}</p>
-                                                    <div className="flex items-center gap-2">
-                                                        <span className="rounded-full bg-blue-imphnen-base/10 px-2 py-1 text-xs font-medium text-blue-imphnen-base">
-                                                            {typeLabels[lecturer.type]}
-                                                        </span>
+                                                        </AvatarFallback>
+                                                    </Avatar>
+                                                ) : (
+                                                    <div className="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary font-semibold text-white">
+                                                        {getInitials(lecturer.name)}
                                                     </div>
-                                                </div>
+                                                )}
+                                            </div>
+
+                                            {/* Konten teks */}
+                                            <div className="text-center">
+                                                <h3 className="mb-1 font-semibold text-dark-base transition-colors duration-300 group-hover:text-blue-imphnen-base dark:text-light-base">
+                                                    {lecturer.name}
+                                                </h3>
+                                                <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">NIP: {lecturer.nip}</p>
+                                                <span className="inline-block rounded-full bg-blue-imphnen-base/10 px-2 py-1 text-xs font-medium text-blue-imphnen-base">
+                                                    {typeLabels[lecturer.type]}
+                                                </span>
                                             </div>
                                         </motion.div>
                                     ))}
