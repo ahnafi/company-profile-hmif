@@ -14,23 +14,23 @@ use App\Http\Controllers\ArticleController;
 
 // Company Profile
 Route::controller(CompanyProfileController::class)->group(function () {
-    Route::get('/', fn() => 'Halaman Utama');
-    Route::get('/visi-misi', fn() => 'Halaman Visi dan Misi');
+    Route::get('/', fn() => inertia('welcome'))->name('home');
+    Route::get('/visi-misi', fn() => inertia('about-hmif/vision-mission'))->name('vision.mission');
 });
 
 // Blog, News, and Articles
 Route::controller(ArticleController::class)->group(function () {
-    Route::get('/berita', fn() => 'Halaman Berita / Artikel');
+    Route::get('/berita', 'index')->name('articles.index');
 });
 
 // Lecturer
 Route::controller(LecturerController::class)->group(function () {
-    Route::get('/dosen','index')->name("lecturer");
+    Route::get('/dosen', "index")->name("lecturer");
 });
 
 // Downloadable
 Route::controller(DownloadableController::class)->group(function () {
-    Route::get('/unduhan', fn() => 'Halaman Unduhan (Dokumen dan Formulir Penting)');
+    Route::get('/unduhan', fn() => inertia('download'))->name('download');
 });
 
 // I-Magz
@@ -40,9 +40,11 @@ Route::controller(IMagzController::class)->group(function () {
 
 // Organisasi
 Route::controller(OrganizationController::class)->group(function () {
-    Route::get('/struktur-organisasi', fn() => 'Halaman Struktur Organisasi');
-    Route::get('/proker-divisi', fn() => 'Halaman Program Kerja Divisi');
-    Route::get('proker-divisi/{slug}', fn($slug) => "Halaman Program Kerja Divisi: $slug");
+    Route::get('/struktur-organisasi', function () {
+        return inertia('about-hmif/organization-structure');
+    })->name('organization.structure');
+    Route::get('/proker-divisi', 'workPrograms')->name('work-program.index');
+    Route::get('proker-divisi/{workProgram}', 'detailWorkProgram')->name('work-program.show');
 });
 
 // IF Bangga
