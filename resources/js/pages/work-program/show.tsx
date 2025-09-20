@@ -42,77 +42,7 @@ interface WorkPlanShowProps {
     workProgram: WorkProgram;
 }
 
-// Data dummy untuk development
-const dummyWorkProgram: WorkProgram = {
-    id: 1,
-    name: 'HMIF Tech Talk Series 2024',
-    description:
-        'HMIF Tech Talk Series 2024 adalah program unggulan yang dirancang untuk memberikan wawasan mendalam tentang perkembangan teknologi terkini kepada mahasiswa Informatika. Program ini menghadirkan para praktisi industri, akademisi terkemuka, dan peneliti dari berbagai bidang teknologi untuk berbagi pengalaman dan pengetahuan mereka.\n\nMelalui serangkaian webinar, workshop hands-on, dan sesi diskusi interaktif, peserta akan mendapatkan pemahaman yang komprehensif tentang tren teknologi seperti Artificial Intelligence, Machine Learning, Cloud Computing, Blockchain, Cybersecurity, dan Internet of Things.\n\nProgram ini tidak hanya fokus pada aspek teknis, tetapi juga membahas aspek bisnis dan implementasi praktis di industri. Peserta akan mendapatkan kesempatan untuk networking dengan para profesional dan membuka peluang magang atau karir di masa depan.',
-    images: [
-        '/img/work-programs/tech-talk-1.jpg',
-        '/img/work-programs/tech-talk-2.jpg',
-        '/img/work-programs/tech-talk-3.jpg',
-        '/img/work-programs/tech-talk-4.jpg',
-    ],
-    division_id: 1,
-    division: { id: 1, name: 'Humas dan Kemitraan', slug: 'humas-kemitraan' },
-    work_program_administrators: [
-        {
-            id: 1,
-            position: 'Ketua Pelaksana',
-            work_program_id: 1,
-            administrator_id: 1,
-            administrator: {
-                id: 1,
-                name: 'Ahmad Santoso',
-                position: 'Koordinator Humas',
-                email: 'ahmad.santoso@hmif.unsoed.ac.id',
-                phone: '+62 812-3456-7890',
-            },
-        },
-        {
-            id: 2,
-            position: 'Wakil Ketua Pelaksana',
-            work_program_id: 1,
-            administrator_id: 2,
-            administrator: {
-                id: 2,
-                name: 'Siti Rahma Dewi',
-                position: 'Staff Humas',
-                email: 'siti.rahma@hmif.unsoed.ac.id',
-                phone: '+62 813-4567-8901',
-            },
-        },
-        {
-            id: 3,
-            position: 'Koordinator Acara',
-            work_program_id: 1,
-            administrator_id: 3,
-            administrator: {
-                id: 3,
-                name: 'Budi Prasetyo',
-                position: 'Staff Acara',
-                email: 'budi.prasetyo@hmif.unsoed.ac.id',
-            },
-        },
-        {
-            id: 4,
-            position: 'Koordinator Sponsorship',
-            work_program_id: 1,
-            administrator_id: 4,
-            administrator: {
-                id: 4,
-                name: 'Maria Ulfah',
-                position: 'Staff Sponsorship',
-                email: 'maria.ulfah@hmif.unsoed.ac.id',
-            },
-        },
-    ],
-    created_at: '2024-01-15T10:30:00.000000Z',
-    updated_at: '2024-01-15T10:30:00.000000Z',
-};
-
-export default function WorkPlanShow({ workProgram = dummyWorkProgram }: WorkPlanShowProps) {
+export default function WorkPlanShow({ workProgram }: WorkPlanShowProps) {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [showImageModal, setShowImageModal] = useState(false);
 

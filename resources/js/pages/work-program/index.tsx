@@ -294,7 +294,7 @@ export default function WorkPlanIndex({ workPrograms = dummyWorkPrograms, divisi
                                 </p>
                             </motion.div>
 
-                            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                                 {filteredWorkPrograms.map((program, index) => {
                                     const mainAdmin = getMainAdministrator(program.work_program_administrators);
 
@@ -334,7 +334,7 @@ export default function WorkPlanIndex({ workPrograms = dummyWorkPrograms, divisi
                                                 </h3>
 
                                                 {program.description && (
-                                                    <p className="mb-4 line-clamp-3 text-sm text-gray-600 dark:text-gray-400">
+                                                    <p className="mb-4 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
                                                         {program.description}
                                                     </p>
                                                 )}
@@ -370,7 +370,7 @@ export default function WorkPlanIndex({ workPrograms = dummyWorkPrograms, divisi
 
                                                 {/* View Details Button */}
                                                 <Link
-                                                    href={`/work-plan/${program.id}`}
+                                                    href={`/proker-divisi/${program.id}`}
                                                     className="group/btn flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-imphnen-base to-blue-imphnen-secondary px-4 py-3 text-sm font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-md"
                                                 >
                                                     <Eye className="h-4 w-4" />

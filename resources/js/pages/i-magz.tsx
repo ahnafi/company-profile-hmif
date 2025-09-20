@@ -4,8 +4,8 @@ import { motion } from 'framer-motion';
 import { BookOpen, Calendar, ChevronLeft, ChevronRight, Download, Eye, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 
 // Set up PDF.js worker
 pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
