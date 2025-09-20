@@ -13,6 +13,7 @@ class WorkProgram extends Model
     protected $fillable = [
         'name',
         'description',
+        'type',
         'images',
         'division_id',
     ];

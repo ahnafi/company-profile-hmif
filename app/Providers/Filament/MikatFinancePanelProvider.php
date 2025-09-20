@@ -25,6 +25,8 @@ class MikatFinancePanelProvider extends PanelProvider
         return $panel
             ->id('mikatFinance')
             ->path('mikatFinance')
+            ->favicon(asset('logo.svg'))
+            ->brandLogo(asset('logo.svg'))
             ->colors([
                 'primary' => Color::Amber,
             ])

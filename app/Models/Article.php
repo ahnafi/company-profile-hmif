@@ -18,7 +18,7 @@ class Article extends Model
         "thumbnail",
         "content",
         "author_id",
-        "article_category_id"
+        "category_id"
     ];
 
     public function setTitleAttribute($value): void

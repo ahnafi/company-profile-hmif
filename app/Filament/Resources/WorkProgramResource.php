@@ -32,6 +32,7 @@ class WorkProgramResource extends Resource
                 Forms\Components\RichEditor::make('description')
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('images')
+                    ->directory('work_program')
                     ->previewable()
                     ->image()
                     ->imageEditor()
@@ -46,8 +47,6 @@ class WorkProgramResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('description')
-                    ->searchable(),
                 Tables\Columns\TextColumn::make('division.name')
                     ->numeric()
                     ->sortable(),
@@ -55,6 +54,18 @@ class WorkProgramResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                Tables\Columns\TextColumn::make('type')
+                    ->badge()
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                        'work_program' => 'Program Kerja',
+                        'work_agenda' => 'Agenda Kerja',
+                        default => $state,
+                    })
+                    ->color(fn (string $state): string => match ($state) {
+                        'work_program' => 'success',
+                        'work_agenda' => 'info',
+                        default => 'gray',
+                    }),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()

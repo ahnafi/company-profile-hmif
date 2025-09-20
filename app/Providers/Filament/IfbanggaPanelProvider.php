@@ -25,6 +25,8 @@ class IfbanggaPanelProvider extends PanelProvider
         return $panel
             ->id('ifbangga')
             ->path('ifbangga')
+            ->favicon(asset('logo.svg'))
+            ->brandLogo(asset('logo.svg'))
             ->colors([
                 'primary' => Color::Amber,
             ])

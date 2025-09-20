@@ -25,6 +25,8 @@ class IltekFinancePanelProvider extends PanelProvider
         return $panel
             ->id('iltekFinance')
             ->path('iltekFinance')
+            ->favicon(asset('logo.svg'))
+            ->brandLogo(asset('logo.svg'))
             ->colors([
                 'primary' => Color::Amber,
             ])

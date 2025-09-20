@@ -25,6 +25,8 @@ class KreusFinancePanelProvider extends PanelProvider
         return $panel
             ->id('kreusFinance')
             ->path('kreusFinance')
+            ->favicon(asset('logo.svg'))
+            ->brandLogo(asset('logo.svg'))
             ->colors([
                 'primary' => Color::Amber,
             ])
