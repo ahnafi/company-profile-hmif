@@ -35,7 +35,9 @@ Route::controller(DownloadableController::class)->group(function () {
 
 // I-Magz
 Route::controller(IMagzController::class)->group(function () {
-    Route::get('/imagz', fn() => 'Halaman Imagz (Magazine)');
+    Route::get('/imagz', 'index')->name('imagz.index');
+    Route::get('/imagz/{magazine}', 'show')->name('imagz.show');
+    Route::get('/imagz/{magazine}/download', 'download')->name('imagz.download');
 });
 
 // Organisasi
