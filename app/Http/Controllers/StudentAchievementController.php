@@ -2,170 +2,102 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\AchievementFilterRequest;
-use App\Http\Requests\AchievementFormRequest;
-use Illuminate\Http\Request;
 use App\Models\Achievement;
-use App\Models\Student;
 use App\Models\AchievementCategory;
 use App\Models\AchievementLevel;
 use App\Models\AchievementType;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class StudentAchievementController extends Controller
 {
-        public function index(AchievementFilterRequest $request)
-        {
-            // Filtered Achievements
-            $achievements = Achievement::with([
-                'students',
-                'achievementType:id,name',
-                'achievementCategory:id,name',
-                'achievementLevel:id,name'
-            ])
-                ->when($request->type_id, fn($q) => $q->where('achievement_type_id', $request->type_id))
-                ->when($request->category_id, fn($q) => $q->where('achievement_category_id', $request->category_id))
-                ->when($request->level_id, fn($q) => $q->where('achievement_level_id', $request->level_id))
-                ->when($request->study_program, fn($q) =>
-                    $q->whereHas('students', fn($sq) =>
-                    $sq->where('study_program', $request->study_program)
-                )
-                )
-                ->when($request->batch_year, fn($q) =>
-                    $q->whereHas('students', fn($sq) =>
-                    $sq->where('batch_year', $request->batch_year)
-                )
-                )
-                ->when($request->student_name, fn($q) =>
-                    $q->whereHas('students', fn($sq) =>
-                    $sq->where('name', 'like', '%' . $request->student_name . '%')
-                )
-                )
-                ->when($request->nim, fn($q) =>
-                    $q->whereHas('students', fn($sq) =>
-                    $sq->where('nim', 'like', '%' . $request->nim . '%')
-                )
-                )
-                ->orderBy('awarded_at', 'desc')
-                ->get()
-                ->map(fn($achievement) => [
-                    'id'            => $achievement->id,
-                    'name'          => $achievement->name,
-                    'description'   => $achievement->description,
-                    'image'         => $achievement->image,
-                    'awarded_at'    => $achievement->awarded_at,
-                    'type_name'     => $achievement->achievementType->name,
-                    'category_name' => $achievement->achievementCategory->name,
-                    'level_name'    => $achievement->achievementLevel->name,
-                    'students'      => $achievement->students->map(fn($student) => [
-                        'student_id'    => $student->id,
-                        'student_name'  => $student->name,
-                        'nim'           => $student->nim,
-                        'study_program' => $student->study_program,
-                        'batch_year'    => $student->batch_year,
-                    ])
-                ]);
-
-            $types = AchievementType::select('id', 'name')->get();
-            $categories = AchievementCategory::select('id', 'name')->get();
-            $levels = AchievementLevel::select('id', 'name')->get();
-            $studyPrograms = Student::select('study_program')->distinct()->pluck('study_program');
-            $batchYears = Student::select('batch_year')->distinct()->pluck('batch_year');
-
-            // Leaderboard of Students with Achievements
-            $leaderboard = Student::withCount('achievements')
-                ->orderByDesc('achievements_count')
-                ->take(10)
-                ->get(['id', 'name', 'nim', 'study_program', 'batch_year', 'achievements_count']);
-
-            return view('achievements.index', [
-                'filters' => [
-                    'types'         => $types,
-                    'categories'    => $categories,
-                    'levels'        => $levels,
-                    'studyPrograms' => $studyPrograms,
-                    'batchYears'    => $batchYears
-                ],
-                'achievements' => $achievements,
-                'leaderboard'  => $leaderboard
-            ]);
-        }
-
-        public function form()
-        {
-            $types = AchievementType::select('id', 'name')->get();
-            $categories = AchievementCategory::select('id', 'name')->get();
-            $levels = AchievementLevel::select('id', 'name')->get();
-
-            return view('achievements.form', [
-                'types'       => $types,
-                'categories'  => $categories,
-                'levels'      => $levels,
-            ]);
-        }
-
-    public function create(AchievementFormRequest $request)
+    public function index(Request $request)
     {
-        $validated = $request->validated();
+        $query = Achievement::with([
+            'achievementType', 
+            'achievementCategory', 
+            'achievementLevel', 
+            'students'
+        ])->where('approval', true);
 
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $imageName = time() . '_' . Str::slug($validated['name']) . '_' . uniqid() . '.' .
-                $request->file('image')->extension();
-            $stored = $request->file('image')->storeAs('achievement_images', $imageName, 'public');
-            $imagePath = $stored;
+        // Filter by search term
+        if ($request->filled('search')) {
+            $search = $request->get('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%")
+                  ->orWhereHas('students', function($studentQuery) use ($search) {
+                      $studentQuery->where('name', 'LIKE', "%{$search}%");
+                  });
+            });
         }
 
-        $proofPath = null;
-        if ($request->hasFile('proof')) {
-            $proofName = time() . '_' . Str::slug($validated['name']) . '_' . uniqid() . '.' .
-                $request->file('proof')->extension();
-            $stored = $request->file('proof')->storeAs('achievement_proofs', $proofName, 'public');
-            $proofPath = $stored;
+        // Filter by type
+        if ($request->filled('type') && $request->get('type') !== 'all') {
+            $query->where('achievement_type_id', $request->get('type'));
         }
 
-        DB::beginTransaction();
-
-        try {
-            $achievement = Achievement::create([
-                'achievement_type_id'     => $validated['type_id'],
-                'achievement_category_id' => $validated['category_id'],
-                'achievement_level_id'    => $validated['level_id'],
-                'name'                    => $validated['name'],
-                'description'             => $validated['description'],
-                'awarded_at'              => $validated['awarded_at'],
-                'image'                   => $imagePath,
-                'proof'                   => $proofPath,
-                'approval'                => false,
-            ]);
-
-            $studentIds = Student::whereIn('nim', $validated['nim'])->pluck('id')->all();
-            if (!empty($studentIds)) {
-                $achievement->students()->syncWithoutDetaching($studentIds);
-            }
-
-            DB::commit();
-
-            return redirect()
-                ->route('student.achievements.index')
-                ->with('success', 'Prestasi berhasil ditambahkan dan menunggu persetujuan.');
-
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            if ($imagePath) {
-                Storage::delete('public/' . $imagePath);
-            }
-            if ($proofPath) {
-                Storage::delete('public/' . $proofPath);
-            }
-
-            report($e);
-
-            return back()
-                ->withInput()
-                ->withErrors(['general' => 'Terjadi kesalahan saat menyimpan prestasi. Silakan coba lagi.']);
+        // Filter by category
+        if ($request->filled('category') && $request->get('category') !== 'all') {
+            $query->where('achievement_category_id', $request->get('category'));
         }
+
+        // Filter by level
+        if ($request->filled('level') && $request->get('level') !== 'all') {
+            $query->where('achievement_level_id', $request->get('level'));
+        }
+
+        // Filter by year
+        if ($request->filled('year') && $request->get('year') !== 'all') {
+            $query->whereYear('awarded_at', $request->get('year'));
+        }
+
+        $achievements = $query->orderBy('awarded_at', 'desc')
+                             ->paginate(9)
+                             ->withQueryString();
+
+        $types = AchievementType::orderBy('name')->get();
+        $categories = AchievementCategory::orderBy('name')->get();
+        $levels = AchievementLevel::orderBy('name')->get();
+        
+        // Get available years
+        $years = Achievement::selectRaw('YEAR(awarded_at) as year')
+                           ->where('approval', true)
+                           ->distinct()
+                           ->orderBy('year', 'desc')
+                           ->pluck('year');
+
+        return inertia('if-bangga', [
+            'achievements' => $achievements,
+            'types' => $types,
+            'categories' => $categories,
+            'levels' => $levels,
+            'years' => $years,
+            'filters' => [
+                'search' => $request->get('search'),
+                'type' => $request->get('type', 'all'),
+                'category' => $request->get('category', 'all'),
+                'level' => $request->get('level', 'all'),
+                'year' => $request->get('year', 'all'),
+            ]
+        ]);
+    }
+
+    public function form()
+    {
+        $types = AchievementType::orderBy('name')->get();
+        $categories = AchievementCategory::orderBy('name')->get();
+        $levels = AchievementLevel::orderBy('name')->get();
+
+        return inertia('if-bangga/form', [
+            'types' => $types,
+            'categories' => $categories,
+            'levels' => $levels,
+        ]);
+    }
+
+    public function create(Request $request)
+    {
+        // Implementation for creating achievement
+        // This would handle form submission
     }
 }

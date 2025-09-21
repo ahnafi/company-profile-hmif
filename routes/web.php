@@ -21,6 +21,7 @@ Route::controller(CompanyProfileController::class)->group(function () {
 // Blog, News, and Articles
 Route::controller(ArticleController::class)->group(function () {
     Route::get('/berita', 'index')->name('articles.index');
+    Route::get('/berita/{article:slug}', 'show')->name('articles.show');
 });
 
 // Lecturer
@@ -46,7 +47,7 @@ Route::controller(OrganizationController::class)->group(function () {
         return inertia('about-hmif/organization-structure');
     })->name('organization.structure');
     Route::get('/proker-divisi', 'workPrograms')->name('work-program.index');
-    Route::get('proker-divisi/{workProgram}', 'detailWorkProgram')->name('work-program.show');
+    Route::get('/proker-divisi/{workProgram}', 'detailWorkProgram')->name('work-program.show');
 });
 
 // IF Bangga
