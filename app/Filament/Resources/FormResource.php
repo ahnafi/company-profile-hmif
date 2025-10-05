@@ -7,39 +7,37 @@ use App\Filament\Resources\FormResource\RelationManagers;
 use App\Models\Form;
 use App\Models\FormField;
 use Filament\Forms;
+use Filament\Forms\Components\DateTimePicker;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form as FilamentForm;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Columns\BooleanColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\Repeater;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\Toggle;
-use Filament\Forms\Components\DateTimePicker;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Grid;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\BooleanColumn;
-use Filament\Tables\Columns\BadgeColumn;
-use Filament\Tables\Filters\TrashedFilter;
-use Filament\Tables\Actions\Action;
-use Filament\Notifications\Notification;
-use App\Filament\Exports\FormSubmissionExporter;
-use Filament\Actions\Exports\Enums\ExportFormat;
 use Illuminate\Support\Str;
+use Filament\Notifications\Notification;
 
 class FormResource extends Resource
 {
     protected static ?string $model = Form::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
-    
+
     protected static ?string $navigationGroup = 'Form Builder';
-    
+
     protected static ?int $navigationSort = 1;
 
     public static function form(FilamentForm $form): FilamentForm
@@ -55,17 +53,17 @@ class FormResource extends Resource
                                     ->maxLength(255)
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(fn (string $context, $state, Forms\Set $set) => $context === 'create' ? $set('slug', Str::slug($state)) : null),
-                                
+
                                 TextInput::make('slug')
                                     ->required()
                                     ->maxLength(255)
                                     ->unique(Form::class, 'slug', ignoreRecord: true)
                                     ->rules(['alpha_dash']),
                             ]),
-                        
+
                         Textarea::make('description')
                             ->rows(3),
-                        
+
                         FileUpload::make('thumbnail')
                             ->image()
                             ->directory('form-thumbnails'),
@@ -78,23 +76,23 @@ class FormResource extends Resource
                                 Toggle::make('is_active')
                                     ->label('Active')
                                     ->default(true),
-                                
+
                                 Toggle::make('allow_multiple_submissions')
                                     ->label('Allow Multiple Submissions')
                                     ->default(true),
-                                
+
                                 TextInput::make('submission_limit')
                                     ->label('Submission Limit')
                                     ->numeric()
                                     ->minValue(1)
                                     ->placeholder('Leave empty for unlimited'),
                             ]),
-                        
+
                         Grid::make(2)
                             ->schema([
                                 DateTimePicker::make('start_date')
                                     ->label('Start Date'),
-                                
+
                                 DateTimePicker::make('end_date')
                                     ->label('End Date')
                                     ->after('start_date'),
@@ -116,16 +114,16 @@ class FormResource extends Resource
                                                     $set('required', false);
                                                 }
                                             }),
-                                        
+
                                         TextInput::make('label')
                                             ->required()
                                             ->hidden(fn (Forms\Get $get) => in_array($get('type'), FormField::getFieldTypesWithoutInput())),
-                                        
+
                                         Toggle::make('required')
                                             ->default(false)
                                             ->hidden(fn (Forms\Get $get) => in_array($get('type'), FormField::getFieldTypesWithoutInput())),
                                     ]),
-                                
+
                                 TextInput::make('placeholder')
                                     ->visible(fn (Forms\Get $get) => in_array($get('type'), [
                                         FormField::TYPE_TEXT,
@@ -133,18 +131,18 @@ class FormResource extends Resource
                                         FormField::TYPE_EMAIL,
                                         FormField::TYPE_NUMBER,
                                     ])),
-                                
+
                                 Textarea::make('content')
                                     ->label('Content')
                                     ->visible(fn (Forms\Get $get) => in_array($get('type'), [
                                         FormField::TYPE_HEADING,
                                         FormField::TYPE_PARAGRAPH,
                                     ])),
-                                
+
                                 Textarea::make('help_text')
                                     ->label('Help Text')
                                     ->rows(2),
-                                
+
                                 Repeater::make('options')
                                     ->schema([
                                         TextInput::make('label')
@@ -171,38 +169,39 @@ class FormResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->defaultSort("created_at","desc")
             ->columns([
                 TextColumn::make('title')
                     ->searchable()
                     ->sortable(),
-                
+
                 TextColumn::make('slug')
                     ->searchable()
                     ->copyable()
                     ->copyMessage('Slug copied!')
                     ->limit(30),
-                
+
                 BooleanColumn::make('is_active')
                     ->label('Active'),
-                
+
                 TextColumn::make('submission_count')
                     ->label('Submissions')
                     ->getStateUsing(fn (Form $record) => $record->submissions()->count())
                     ->badge()
                     ->color('success'),
-                
+
                 TextColumn::make('submission_limit')
                     ->label('Limit')
                     ->placeholder('Unlimited'),
-                
+
                 TextColumn::make('start_date')
                     ->dateTime()
                     ->placeholder('No limit'),
-                
+
                 TextColumn::make('end_date')
                     ->dateTime()
                     ->placeholder('No limit'),
-                
+
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
@@ -222,10 +221,42 @@ class FormResource extends Resource
                 Action::make('viewSubmissions')
                     ->label('View Submissions')
                     ->icon('heroicon-o-document-text')
-                    ->url(fn (Form $record): string => static::getUrl('edit', ['record' => $record->id]) . '#submissions')
+                    ->url(fn (Form $record): string => static::getUrl('edit', ['record' => $record->id]).'#submissions')
                     ->color('info'),
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Action::make('clone')
+                        ->label('Clone')
+                        ->icon('heroicon-o-document-duplicate')
+                        ->color('warning')
+                        ->requiresConfirmation()
+                        ->modalHeading('Clone Form')
+                        ->modalDescription('Are you sure you want to clone this form? A new form will be created with the same fields.')
+                        ->modalSubmitActionLabel('Clone')
+                        ->action(function (Form $record) {
+                            // Clone the form
+                            $newForm = $record->replicate();
+                            $newForm->title = $record->title . ' (Copy)';
+                            $newForm->slug = Str::slug($record->title . ' Copy ' . now()->timestamp);
+                            $newForm->is_active = false; // Set inactive by default for safety
+                            $newForm->thumbnail = $record->thumbnail; // Copy thumbnail path
+                            
+                            // Keep the same fields array
+                            $newForm->fields = $record->fields;
+                            
+                            $newForm->save();
+
+                            Notification::make()
+                                ->title('Form cloned successfully')
+                                ->success()
+                                ->body('The form "' . $newForm->title . '" has been created. You can now edit it.')
+                                ->send();
+
+                            // Redirect to edit the new form
+                            return redirect(static::getUrl('edit', ['record' => $newForm->id]));
+                        }),
+                    Tables\Actions\DeleteAction::make(),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
