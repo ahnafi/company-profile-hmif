@@ -68,7 +68,7 @@ Route::prefix('keuangan')->group(function () {
 // Form Builder Routes
 Route::prefix('forms')->group(function () {
     Route::get('/{slug}', [FormController::class, 'show'])->name('forms.show');
-    Route::post('/{slug}/submit', [FormController::class, 'submit'])->name('forms.submit');
+    Route::post('/{slug}/submit', [FormController::class, 'submit'])->name('forms.submit')->middleware('throttle:3,10');
 });
 
 // require __DIR__.'/settings.php';

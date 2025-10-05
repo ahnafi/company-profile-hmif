@@ -27,6 +27,9 @@ use Filament\Tables\Columns\BooleanColumn;
 use Filament\Tables\Columns\BadgeColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Actions\Action;
+use Filament\Notifications\Notification;
+use App\Filament\Exports\FormSubmissionExporter;
+use Filament\Actions\Exports\Enums\ExportFormat;
 use Illuminate\Support\Str;
 
 class FormResource extends Resource
@@ -216,6 +219,11 @@ class FormResource extends Resource
                     ->icon('heroicon-o-eye')
                     ->url(fn (Form $record): string => route('forms.show', $record->slug))
                     ->openUrlInNewTab(),
+                Action::make('viewSubmissions')
+                    ->label('View Submissions')
+                    ->icon('heroicon-o-document-text')
+                    ->url(fn (Form $record): string => static::getUrl('edit', ['record' => $record->id]) . '#submissions')
+                    ->color('info'),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])

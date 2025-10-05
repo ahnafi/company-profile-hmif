@@ -16,6 +16,9 @@ use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\Section;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Tables\Actions\ExportBulkAction;
+use App\Filament\Exports\FormSubmissionExporter;
 
 class SubmissionsRelationManager extends RelationManager
 {
@@ -66,7 +69,11 @@ class SubmissionsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                // Tables\Actions\CreateAction::make(),
+                ExportAction::make()
+                    ->exporter(FormSubmissionExporter::class)
+                    ->label('Export All')
+                    ->color('success')
+                    ->icon('heroicon-o-arrow-down-tray'),
             ])
             ->actions([
                 Action::make('view')
@@ -116,6 +123,8 @@ class SubmissionsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    ExportBulkAction::make()
+                        ->exporter(FormSubmissionExporter::class),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])
