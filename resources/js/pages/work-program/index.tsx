@@ -311,7 +311,7 @@ export default function WorkPlanIndex({ workPrograms = dummyWorkPrograms, divisi
                                             <div className="relative h-48 overflow-hidden">
                                                 {program.images && program.images.length > 0 ? (
                                                     <img
-                                                        src={program.images[0]}
+                                                        src={`/storage/${program.images[0]}`}
                                                         alt={program.name}
                                                         className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
                                                     />

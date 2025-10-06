@@ -97,7 +97,7 @@ export default function WorkPlanShow({ workProgram }: WorkPlanShowProps) {
                         {/* Breadcrumb */}
                         <div className="mb-6">
                             <Link
-                                href="/work-plan"
+                                href="/proker-divisi"
                                 className="inline-flex items-center gap-2 text-blue-imphnen-base transition-colors duration-300 hover:text-blue-imphnen-secondary"
                             >
                                 <ArrowLeft className="h-4 w-4" />
@@ -154,7 +154,7 @@ export default function WorkPlanShow({ workProgram }: WorkPlanShowProps) {
                                     {/* Main Image */}
                                     <div className="relative mb-4 overflow-hidden rounded-lg">
                                         <img
-                                            src={workProgram.images[currentImageIndex]}
+                                            src={"/storage/" + workProgram.images[currentImageIndex]}
                                             alt={`${workProgram.name} - Foto ${currentImageIndex + 1}`}
                                             className="h-96 w-full cursor-pointer object-cover"
                                             onClick={() => openImageModal(currentImageIndex)}
@@ -193,7 +193,7 @@ export default function WorkPlanShow({ workProgram }: WorkPlanShowProps) {
                                                         currentImageIndex === index ? 'ring-2 ring-blue-imphnen-base' : 'hover:opacity-80'
                                                     }`}
                                                 >
-                                                    <img src={image} alt={`Thumbnail ${index + 1}`} className="h-full w-full object-cover" />
+                                                    <img src={`/storage/${image}`} alt={`Thumbnail ${index + 1}`} className="h-full w-full object-cover" />
                                                 </button>
                                             ))}
                                         </div>

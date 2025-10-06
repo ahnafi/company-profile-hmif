@@ -240,7 +240,7 @@ export default function ArticleShow({
                                     {/* Featured Image */}
                                     {article.thumbnail && (
                                         <div className="mb-8 overflow-hidden rounded-lg">
-                                            <img src={article.thumbnail} alt={article.title} className="h-auto w-full object-cover" />
+                                            <img src={`/storage/${article.thumbnail}`} alt={article.title} className="h-auto w-full object-cover" />
                                         </div>
                                     )}
                                 </header>
