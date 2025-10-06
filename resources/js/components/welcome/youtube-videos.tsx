@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 
 interface YouTubeVideo {
@@ -36,13 +37,13 @@ export default function YouTubeVideosSection() {
 
     if (loading) {
         return (
-            <section className="py-16 bg-gray-50">
+            <section className="py-16 bg-gray-50 dark:bg-gray-900">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-center mb-12">
+                    <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
                         Video Terbaru Kami
                     </h2>
                     <div className="flex justify-center items-center min-h-[300px]">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white"></div>
                     </div>
                 </div>
             </section>
@@ -51,12 +52,12 @@ export default function YouTubeVideosSection() {
 
     if (error) {
         return (
-            <section className="py-16 bg-gray-50">
+            <section className="py-16 bg-gray-50 dark:bg-gray-900">
                 <div className="container mx-auto px-4">
-                    <h2 className="text-3xl font-bold text-center mb-12">
+                    <h2 className="text-3xl font-bold text-center mb-12 text-gray-900 dark:text-white">
                         Video Terbaru Kami
                     </h2>
-                    <div className="text-center text-red-600">
+                    <div className="text-center text-red-600 dark:text-red-400">
                         <p>Gagal memuat video: {error}</p>
                     </div>
                 </div>
@@ -65,12 +66,12 @@ export default function YouTubeVideosSection() {
     }
 
     return (
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-gray-50 dark:bg-gray-900">
             <div className="container mx-auto px-4">
-                <h2 className="text-3xl font-bold text-center mb-4">
+                <h2 className="text-3xl font-bold text-center mb-4 text-gray-900 dark:text-white">
                     Video Terbaru Kami
                 </h2>
-                <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+                <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
                     Tonton video terbaru dari channel YouTube kami untuk mendapatkan update terkini
                 </p>
                 
@@ -78,7 +79,7 @@ export default function YouTubeVideosSection() {
                     {videos.map((video) => (
                         <div 
                             key={video.id} 
-                            className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                            className="bg-white dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden hover:shadow-xl dark:hover:shadow-2xl transition-shadow duration-300"
                         >
                             <div className="relative aspect-video">
                                 <iframe
@@ -90,10 +91,10 @@ export default function YouTubeVideosSection() {
                                 />
                             </div>
                             <div className="p-4">
-                                <h3 className="font-semibold text-lg mb-2 line-clamp-2">
+                                <h3 className="font-semibold text-lg mb-2 line-clamp-2 text-gray-900 dark:text-white">
                                     {video.title}
                                 </h3>
-                                <p className="text-sm text-gray-500">
+                                <p className="text-sm text-gray-500 dark:text-gray-400">
                                     {new Date(video.publishedAt).toLocaleDateString('id-ID', {
                                         year: 'numeric',
                                         month: 'long',
@@ -106,7 +107,7 @@ export default function YouTubeVideosSection() {
                 </div>
                 
                 {videos.length === 0 && (
-                    <div className="text-center text-gray-600">
+                    <div className="text-center text-gray-600 dark:text-gray-400">
                         <p>Belum ada video tersedia</p>
                     </div>
                 )}
