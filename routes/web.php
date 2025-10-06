@@ -11,6 +11,7 @@ use App\Http\Controllers\DownloadableController;
 use App\Http\Controllers\OrganizationController;
 use App\Http\Controllers\IMagzController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\YouTubeController;
 
 // Company Profile
 Route::controller(CompanyProfileController::class)->group(function () {
@@ -70,6 +71,9 @@ Route::prefix('forms')->group(function () {
     Route::get('/{slug}', [FormController::class, 'show'])->name('forms.show');
     Route::post('/{slug}/submit', [FormController::class, 'submit'])->name('forms.submit')->middleware('throttle:3,10');
 });
+
+// YouTube Videos API
+Route::get('/api/youtube-videos', [YouTubeController::class, 'getLatestVideos']);
 
 // require __DIR__.'/settings.php';
 // require __DIR__.'/auth.php';
