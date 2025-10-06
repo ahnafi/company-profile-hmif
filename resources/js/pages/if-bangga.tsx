@@ -370,13 +370,13 @@ export default function IFBanggaPage({ achievements, types, categories, levels, 
 
                         {/* Submit Achievement Button */}
                         <div className="flex justify-center">
-                            <Link
+                            <a
                                 href="/if-bangga/formulir"
                                 className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-imphnen-base to-blue-imphnen-secondary px-6 py-3 font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-md"
                             >
                                 <Plus className="h-4 w-4" />
                                 Ajukan Prestasi
-                            </Link>
+                            </a>
                         </div>
                     </motion.div>
                 </div>
@@ -483,7 +483,7 @@ export default function IFBanggaPage({ achievements, types, categories, levels, 
                                             {/* Proof Link */}
                                             {achievement.proof && (
                                                 <a
-                                                    href={achievement.proof}
+                                                    href={`/storage/${achievement.proof}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="inline-flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-imphnen-base to-blue-imphnen-secondary px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-md"
@@ -520,13 +520,13 @@ export default function IFBanggaPage({ achievements, types, categories, levels, 
                             </div>
                             <h3 className="mb-2 font-semibold text-gray-900 dark:text-white">Tidak Ada Prestasi Ditemukan</h3>
                             <p className="mb-4 text-gray-600 dark:text-gray-400">Coba ubah filter atau kata kunci pencarian yang digunakan.</p>
-                            <Link
+                            <a
                                 href="/if-bangga/formulir"
                                 className="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-blue-imphnen-base to-blue-imphnen-secondary px-6 py-3 font-medium text-white transition-all duration-300 hover:scale-105"
                             >
                                 <Plus className="h-4 w-4" />
                                 Ajukan Prestasi Pertama
-                            </Link>
+                            </a>
                         </motion.div>
                     )}
                 </div>
@@ -547,13 +547,13 @@ export default function IFBanggaPage({ achievements, types, categories, levels, 
                             Bagikan prestasi membanggakan Anda dengan mengisi formulir pengajuan prestasi. Mari bersama membanggakan nama Informatika
                             Unsoed!
                         </p>
-                        <Link
+                        <a
                             href="/if-bangga/formulir"
                             className="inline-flex items-center gap-2 rounded-lg bg-white px-8 py-4 font-semibold text-blue-imphnen-base transition-all duration-300 hover:scale-105 hover:shadow-lg"
                         >
                             <Plus className="h-5 w-5" />
                             Ajukan Prestasi Sekarang
-                        </Link>
+                        </a>
                     </motion.div>
                 </div>
             </section>

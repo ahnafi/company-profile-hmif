@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\AchievementResource\Pages;
-use App\Filament\Resources\AchievementResource\RelationManagers;
 use App\Models\Achievement;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -18,6 +17,7 @@ class AchievementResource extends Resource
     protected static ?string $model = Achievement::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $navigationGroup = 'Database IF Bangga';
 
     public static function form(Form $form): Form
@@ -28,7 +28,7 @@ class AchievementResource extends Resource
                     ->required(),
                 Forms\Components\Select::make('students')
                     ->relationship('students', 'nim')
-                    ->getOptionLabelFromRecordUsing(fn($record) => "{$record->nim} - {$record->name}")
+                    ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->nim} - {$record->name}")
                     ->searchable(['name', 'nim'])
                     ->preload()
                     ->multiple()
@@ -36,13 +36,20 @@ class AchievementResource extends Resource
                 Forms\Components\Textarea::make('description')
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('image')
+                Forms\Components\FileUpload::make('image')
+                    ->openable()
+                    ->downloadable()
+                    ->directory('ifbangga-image')
+                    ->image()
                     ->required()
                     ->columnSpanFull(),
-                Forms\Components\Textarea::make('proof')
+                Forms\Components\FileUpload::make('proof')
+                    ->openable()
+                    ->downloadable()
+                    ->directory('ifbangga-proof')
+                    ->image()
                     ->columnSpanFull(),
                 Forms\Components\DatePicker::make('awarded_at'),
-                Forms\Components\Toggle::make('approval'),
                 Forms\Components\Select::make('achievement_type_id')
                     ->relationship('achievementType', 'name')
                     ->required(),
@@ -52,12 +59,15 @@ class AchievementResource extends Resource
                 Forms\Components\Select::make('achievement_level_id')
                     ->relationship('achievementLevel', 'name')
                     ->required(),
+                Forms\Components\Toggle::make('approval')
+                    ->nullable(),
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
@@ -82,9 +92,9 @@ class AchievementResource extends Resource
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Tanggal Submit')
                     ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
@@ -94,7 +104,7 @@ class AchievementResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\Action::make("Approve")
+                Tables\Actions\Action::make('Approve')
                     ->color('success')
                     ->requiresConfirmation()
                     ->icon('heroicon-o-check')
@@ -102,7 +112,7 @@ class AchievementResource extends Resource
                     ->action(fn ($record) => $record->update(['approval' => true]))
                     ->successNotificationTitle('Achievement approved successfully'),
 
-                Tables\Actions\Action::make("Reject")
+                Tables\Actions\Action::make('Reject')
                     ->color('danger')
                     ->requiresConfirmation()
                     ->icon('heroicon-o-x-mark')

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->text('image');
-            $table->text('proof')->nullable();
+            $table->string('image');
+            $table->string('proof')->nullable();
             $table->date('awarded_at')->nullable();
             $table->boolean('approval')->nullable()->default(null);
             $table->foreignId('achievement_type_id')->constrained('achievement_types');
