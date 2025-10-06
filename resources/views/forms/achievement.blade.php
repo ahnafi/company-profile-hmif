@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Form Pendaftaran IF Bangga - HMIF</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="{{ asset('img/logos/hmif.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('img/logos/hmif.png') }}">
+    @vite(['resources/css/app.css', "resources/js/app.tsx"])
+    
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         /* Custom scrollbar for dropdown */
@@ -59,6 +62,16 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
 
+                    <!-- Organizer -->
+                    <div>
+                        <label for="organizer" class="block text-sm font-medium text-gray-700 mb-1">
+                            Penyelenggara/Organizer <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="organizer" name="organizer" required
+                            placeholder="Contoh: HMIF, IEEE, Kementerian Pendidikan"
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+
                     <!-- Students (NIM) -->
                     <div>
                         <label for="student_search" class="block text-sm font-medium text-gray-700 mb-1">
@@ -102,7 +115,7 @@
                     <!-- Image Upload (Bukti Pertama) -->
                     <div>
                         <label for="image" class="block text-sm font-medium text-gray-700 mb-1">
-                            Foto/Dokumentasi Prestasi <span class="text-red-500">*</span>
+                            Foto/Dokumentasi Prestasi (Diri atau Tim) <span class="text-red-500">*</span>
                         </label>
                         <p class="text-sm text-gray-500 mb-2">Upload foto dokumentasi prestasi (format: JPG, PNG, JPEG, max 2MB)</p>
                         <input type="file" id="image" name="image" required accept="image/jpeg,image/png,image/jpg"

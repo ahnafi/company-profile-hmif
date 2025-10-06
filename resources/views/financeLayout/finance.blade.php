@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - HMIF</title>
     <meta name="description" content="Sistem informasi keuangan HMIF - Transparansi keuangan organisasi">
+    <link rel="icon" type="image/png" href="{{ asset('img/logos/hmif.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('img/logos/hmif.png') }}">
     @vite(['resources/css/app.css', "resources/js/app.tsx"])
 </head>
 <body class="bg-gray-100 min-h-screen">

@@ -152,7 +152,7 @@ export default function IMagzPage({ magazines = dummyMagazines }: IMagzProps) {
 
     const downloadMagazine = (magazine: Magazine) => {
         const link = document.createElement('a');
-        link.href = magazine.file;
+        link.href = `/storage/${magazine.file}`;
         link.download = `${magazine.title}.pdf`;
         document.body.appendChild(link);
         link.click();

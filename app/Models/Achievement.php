@@ -16,6 +16,7 @@ class Achievement extends Model
 
     protected $fillable = [
         'name',
+        'organizer',
         'description',
         'image',
         'proof',

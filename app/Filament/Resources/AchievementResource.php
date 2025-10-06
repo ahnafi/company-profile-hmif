@@ -26,6 +26,9 @@ class AchievementResource extends Resource
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required(),
+                Forms\Components\TextInput::make('organizer')
+                    ->label('Organizer/Penyelenggara')
+                    ->required(),
                 Forms\Components\Select::make('students')
                     ->relationship('students', 'nim')
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->nim} - {$record->name}")
@@ -70,6 +73,8 @@ class AchievementResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('organizer')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('students.nim')
                     ->label('Students')

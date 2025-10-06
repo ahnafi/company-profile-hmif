@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Magazine;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class IMagzController extends Controller
 {

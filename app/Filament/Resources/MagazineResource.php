@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\MagazineResource\Pages;
-use App\Filament\Resources\MagazineResource\RelationManagers;
 use App\Models\Magazine;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -18,6 +17,7 @@ class MagazineResource extends Resource
     protected static ?string $model = Magazine::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
     protected static ?string $navigationGroup = 'Manajemen I-Magz';
 
     public static function form(Form $form): Form
@@ -25,6 +25,7 @@ class MagazineResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('file')
+                    ->maxSize(2048)
                     ->directory('magazines')
                     ->openable()
                     ->columnSpanFull()

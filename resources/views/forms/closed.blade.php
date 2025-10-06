@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $form->title }} - Form Closed</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="{{ asset('img/logos/hmif.png') }}">
+    <link rel="apple-touch-icon" href="{{ asset('img/logos/hmif.png') }}">
+    @vite(['resources/css/app.css', "resources/js/app.tsx"])
 </head>
 <body class="bg-gray-50 py-8">
     <div class="max-w-2xl mx-auto px-4">
