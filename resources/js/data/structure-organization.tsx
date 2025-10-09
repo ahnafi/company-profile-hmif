@@ -18,7 +18,6 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/kahim.png',
         imageBackground: '/img/backgrounds/divisi-bph.png',
         instagram: 'rafiqiilham',
-        staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4', 'Staff 5'],
     },
     {
         id: 2,
@@ -28,7 +27,6 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/wakahim.png',
         imageBackground: '/img/backgrounds/divisi-bph.png',
         instagram: 'rvalinafa_',
-        staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4', 'Staff 5'],
     },
     {
         id: 3,
@@ -38,7 +36,7 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/koor-sekretaris.png',
         imageBackground: '/img/backgrounds/divisi-bph.png',
         instagram: '_ayfitriann',
-        staff: ['Staff A', 'Staff B', 'Staff C'],
+        staff: ['Dimas Rafif Zaidan', 'Naila Alifatul Mabruroh', 'Talitha Novelia Salsabila'],
     },
     {
         id: 4,
@@ -48,7 +46,7 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/koor-bendahara.png',
         imageBackground: '/img/backgrounds/divisi-bph.png',
         instagram: 'fiinnnaaaav',
-        staff: ['Staff A', 'Staff B', 'Staff C'],
+        staff: ['Amalia Maharani Andessy', 'Nayla Octavia Ramadhani'],
     },
     {
         id: 5,
@@ -58,7 +56,14 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/koor-medkominfo.png',
         imageBackground: '/img/backgrounds/divisi-medkominfo.png',
         instagram: 'nadzarekafaha',
-        staff: ['Staff A', 'Staff B', 'Staff C'],
+        staff: [
+            'Muhammad Zacky Makarim',
+            'Salma Faizatul Jannah',
+            'Atika Cinta Khaerunnisa',
+            'Daffa Salman Fauzan Santoso',
+            'Diva Syahita Mawarni',
+            'Salsabila Firzah Amanina',
+        ],
     },
     {
         id: 6,
@@ -69,7 +74,15 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/koor-mikat.png',
         imageBackground: '/img/backgrounds/divisi-mikat.jpg',
         instagram: 'rafifsurya_',
-        staff: ['Staff A', 'Staff B', 'Staff C'],
+        staff: [
+            'Intan Ayu Tsalisatul Arifah',
+            'Zainab Feizia',
+            'Fawwaz Fatchurr Rozaq Athaillah',
+            'Afif Nur Rahman',
+            'Bagas Cahya Setiadi',
+            'Yustinus Ergi Owen Sinaga',
+            'Lula Khaisha Delavia',
+        ],
     },
     {
         id: 7,
@@ -80,7 +93,16 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/koor-psdm.png',
         imageBackground: '/img/backgrounds/divisi-psdm.jpg',
         instagram: 'tsaqifhsb_',
-        staff: ['Staff A', 'Staff B', 'Staff C'],
+        staff: [
+            'Hana Naila Rahmadina',
+            'Qayla Zahra Era Putri',
+            'Gilang Happy Dwinugroho',
+            'Muhammad Fikri Firmansyah',
+            'Rizky Amelia Putri',
+            'Talitha Maharani Nashier',
+            'Windi Sulaiman Ismansa',
+            'Yunan Faila Sofi',
+        ],
     },
     {
         id: 8,
@@ -90,7 +112,16 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/koor-iltek.png',
         imageBackground: '/img/backgrounds/divisi-iltek.jpg',
         instagram: 'ath_tsany',
-        staff: ['Staff A', 'Staff B', 'Staff C'],
+        staff: [
+            'Naufal Satrio Putra',
+            'Refa Hasanah',
+            'Atik Ahnafi Sulthon',
+            'Firyal Aufa Fahrudin',
+            'Muhammad Zaki Dzulfikar',
+            'Iven Rival Pangestu',
+            'Melysa Ayu Wulan Sari',
+            'Raihan Dwi Ananda Harvian',
+        ],
     },
     {
         id: 9,
@@ -101,7 +132,14 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/koor-edu.png',
         imageBackground: '/img/backgrounds/divisi-edu.jpg',
         instagram: 'zerive05',
-        staff: ['Staff A', 'Staff B', 'Staff C'],
+        staff: [
+            'Ariza Nola Rufiana',
+            'Wendy Virtus',
+            'Alya Luthfi Kharimah',
+            'Bunga Budi Ambar Wati',
+            'Hafizh Naufal Raditya',
+            'Maharani Tri Wahyuningrum',
+        ],
     },
     {
         id: 10,
@@ -111,7 +149,15 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/koor-kreus.png',
         imageBackground: '/img/backgrounds/divisi-kreus.jpg',
         instagram: 'alpaenf_',
-        staff: ['Staff A', 'Staff B', 'Staff C'],
+        staff: [
+            'Finda Wulan Febrianti',
+            'Ahmad Zaky',
+            'Dera Amelia',
+            'Gerard Roland Kusuma Sarwoko',
+            'Nesa Dwi Cahyani',
+            'Novia Rizky Aryani',
+            'Rajendra Rangga Priyatama',
+        ],
     },
     {
         id: 11,
@@ -122,7 +168,16 @@ const committees: CommitteeMember[] = [
         image: '/img/committees/koor-humas.png',
         imageBackground: '/img/backgrounds/divisi-humas.jpg',
         instagram: 'dyahgputri',
-        staff: ['Staff A', 'Staff B', 'Staff C'],
+        staff: [
+            'Nadine Ariesta',
+            'Huriyatun Nur Anajmi',
+            'Aisyah Syifa Karima',
+            'Khansa Nur Khalisah',
+            'Ali Muhammad Firdaus',
+            'Muhammad Rezqy Robiansyah',
+            'Putri Isnaini Laksita Utami',
+            'Yoga Adi Nugraha',
+        ],
     },
 ];
 
