@@ -16,7 +16,8 @@ class AchievementLevelResource extends Resource
 {
     protected static ?string $model = AchievementLevel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-chart-bar';
+    protected static ?string $navigationLabel = 'Tingkat Prestasi';
     protected static ?string $navigationGroup = 'Database IF Bangga';
 
     public static function form(Form $form): Form
@@ -24,6 +25,7 @@ class AchievementLevelResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama Tingkat')
                     ->required(),
             ]);
     }
@@ -33,12 +35,15 @@ class AchievementLevelResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Tingkat')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
