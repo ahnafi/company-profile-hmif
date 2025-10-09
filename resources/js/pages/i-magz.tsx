@@ -2,13 +2,13 @@ import Layout from '@/components/layout';
 import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { BookOpen, Calendar, ChevronLeft, ChevronRight, Download, Eye, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
 // Set up PDF.js worker
-pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 interface Magazine {
     id: number;
@@ -24,48 +24,7 @@ interface IMagzProps {
     magazines: Magazine[];
 }
 
-// Data dummy untuk development
-const dummyMagazines: Magazine[] = [
-    {
-        id: 1,
-        title: 'I-Magz Edisi 1 - Welcome to HMIF',
-        slug: 'i-magz-edisi-1-welcome-to-hmif',
-        description:
-            'Edisi perdana I-Magz yang membahas tentang perkenalan HMIF Unsoed, visi misi, dan program-program unggulan yang akan dilaksanakan.',
-        file: '/magazines/i-magz-vol-1.pdf',
-        created_at: '2024-01-15T10:30:00.000000Z',
-        updated_at: '2024-01-15T10:30:00.000000Z',
-    },
-    {
-        id: 2,
-        title: 'I-Magz Edisi 2 - Tech Innovation',
-        slug: 'i-magz-edisi-2-tech-innovation',
-        description: 'Membahas perkembangan teknologi terkini, inovasi yang dilakukan mahasiswa, dan tips & tricks dalam dunia pemrograman.',
-        file: '/magazines/i-magz-vol-2.pdf',
-        created_at: '2024-02-15T14:20:00.000000Z',
-        updated_at: '2024-02-15T14:20:00.000000Z',
-    },
-    {
-        id: 3,
-        title: 'I-Magz Edisi 3 - Career Guide',
-        slug: 'i-magz-edisi-3-career-guide',
-        description: 'Panduan karir untuk mahasiswa Informatika, tips interview, portfolio building, dan pengalaman alumni di dunia industri.',
-        file: '/magazines/i-magz-vol-3.pdf',
-        created_at: '2024-03-15T09:45:00.000000Z',
-        updated_at: '2024-03-15T09:45:00.000000Z',
-    },
-    {
-        id: 4,
-        title: 'I-Magz Edisi 4 - Research Spotlight',
-        slug: 'i-magz-edisi-4-research-spotlight',
-        description: 'Menampilkan penelitian-penelitian menarik dari dosen dan mahasiswa, serta perkembangan riset teknologi di Unsoed.',
-        file: '/magazines/i-magz-vol-4.pdf',
-        created_at: '2024-04-15T16:30:00.000000Z',
-        updated_at: '2024-04-15T16:30:00.000000Z',
-    },
-];
-
-export default function IMagzPage({ magazines = dummyMagazines }: IMagzProps) {
+export default function IMagzPage({ magazines }: IMagzProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedMagazine, setSelectedMagazine] = useState<Magazine | null>(null);
     const [showPDFViewer, setShowPDFViewer] = useState(false);
@@ -106,14 +65,6 @@ export default function IMagzPage({ magazines = dummyMagazines }: IMagzProps) {
             month: 'long',
             day: 'numeric',
         });
-    };
-
-    const openPDFViewer = (magazine: Magazine) => {
-        setSelectedMagazine(magazine);
-        setShowPDFViewer(true);
-        setPageNumber(1);
-        setScale(1.0);
-        setLoading(true);
     };
 
     const closePDFViewer = () => {
@@ -157,6 +108,59 @@ export default function IMagzPage({ magazines = dummyMagazines }: IMagzProps) {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+    };
+
+    // Tambahkan di dalam useEffect untuk keyboard navigation
+    useEffect(() => {
+        if (!showPDFViewer) return;
+
+        const handleKeyPress = (e: KeyboardEvent) => {
+            switch (e.key) {
+                case 'ArrowLeft':
+                    e.preventDefault();
+                    previousPage();
+                    break;
+                case 'ArrowRight':
+                    e.preventDefault();
+                    nextPage();
+                    break;
+                case '=':
+                case '+':
+                    e.preventDefault();
+                    zoomIn();
+                    break;
+                case '-':
+                    e.preventDefault();
+                    zoomOut();
+                    break;
+                case 'Escape':
+                    e.preventDefault();
+                    closePDFViewer();
+                    break;
+            }
+        };
+
+        document.addEventListener('keydown', handleKeyPress);
+        return () => document.removeEventListener('keydown', handleKeyPress);
+    }, [showPDFViewer, pageNumber, numPages, scale]);
+
+    // Tambahkan responsive scale default
+    const getResponsiveScale = () => {
+        if (typeof window !== 'undefined') {
+            if (window.innerWidth < 640) return 0.8; // Mobile
+            if (window.innerWidth < 1024) return 0.9; // Tablet
+            return 1.0; // Desktop
+        }
+        return 1.0;
+    };
+
+    // Update fungsi openPDFViewer
+    const openPDFViewer = (magazine: Magazine) => {
+        setSelectedMagazine(magazine);
+        setShowPDFViewer(true);
+        setPageNumber(1);
+        setScale(getResponsiveScale()); // Set responsive scale
+        setLoading(true);
     };
 
     return (
@@ -324,108 +328,214 @@ export default function IMagzPage({ magazines = dummyMagazines }: IMagzProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 flex flex-col bg-black/90"
+                    className="fixed inset-0 z-50 flex flex-col bg-black/95 backdrop-blur-sm top-24"
                 >
-                    {/* Header */}
-                    <div className="flex items-center justify-between border-b border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
-                        <div className="flex-1">
-                            <h3 className="font-semibold text-dark-base dark:text-light-base">{selectedMagazine.title}</h3>
+                    {/* Header - Responsive */}
+                    <div className="flex flex-col justify-between border-b border-gray-200 bg-white p-3 shadow-lg sm:flex-row sm:items-center sm:p-4 dark:border-gray-700 dark:bg-gray-800">
+                        <div className="mb-3 flex-1 sm:mb-0">
+                            <h3 className="line-clamp-1 text-sm font-semibold text-dark-base sm:text-base dark:text-light-base">
+                                {selectedMagazine.title}
+                            </h3>
                             {numPages && (
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-xs text-gray-600 sm:text-sm dark:text-gray-400">
                                     Halaman {pageNumber} dari {numPages}
                                 </p>
                             )}
                         </div>
 
-                        {/* Controls */}
-                        <div className="flex items-center gap-2">
-                            {/* Navigation */}
-                            <button
-                                onClick={previousPage}
-                                disabled={pageNumber <= 1}
-                                className="rounded bg-gray-100 p-2 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600"
-                            >
-                                <ChevronLeft className="h-4 w-4" />
-                            </button>
+                        {/* Controls - Responsive */}
+                        <div className="flex items-center justify-between gap-2 sm:justify-end sm:gap-3">
+                            {/* Navigation Controls */}
+                            <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 sm:gap-2 dark:bg-gray-700">
+                                <button
+                                    onClick={previousPage}
+                                    disabled={pageNumber <= 1}
+                                    className="rounded p-1.5 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 sm:p-2 dark:hover:bg-gray-600"
+                                    title="Halaman Sebelumnya"
+                                >
+                                    <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
+                                </button>
 
-                            <span className="px-2 text-sm text-dark-base dark:text-light-base">
-                                {pageNumber} / {numPages || 0}
-                            </span>
+                                <div className="min-w-[60px] px-2 text-center text-xs text-dark-base sm:text-sm dark:text-light-base">
+                                    {pageNumber} / {numPages || 0}
+                                </div>
 
-                            <button
-                                onClick={nextPage}
-                                disabled={pageNumber >= (numPages || 0)}
-                                className="rounded bg-gray-100 p-2 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600"
-                            >
-                                <ChevronRight className="h-4 w-4" />
-                            </button>
+                                <button
+                                    onClick={nextPage}
+                                    disabled={pageNumber >= (numPages || 0)}
+                                    className="rounded p-1.5 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 sm:p-2 dark:hover:bg-gray-600"
+                                    title="Halaman Selanjutnya"
+                                >
+                                    <ChevronRight className="h-3 w-3 sm:h-4 sm:w-4" />
+                                </button>
+                            </div>
 
                             {/* Zoom Controls */}
-                            <div className="ml-2 border-l border-gray-300 pl-2 dark:border-gray-600">
+                            <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-700">
                                 <button
                                     onClick={zoomOut}
                                     disabled={scale <= 0.5}
-                                    className="rounded bg-gray-100 p-2 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600"
+                                    className="rounded p-1.5 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 sm:p-2 dark:hover:bg-gray-600"
+                                    title="Perkecil"
                                 >
-                                    <ZoomOut className="h-4 w-4" />
+                                    <ZoomOut className="h-3 w-3 sm:h-4 sm:w-4" />
                                 </button>
 
-                                <span className="px-2 text-sm text-dark-base dark:text-light-base">{Math.round(scale * 100)}%</span>
+                                <div className="min-w-[45px] px-2 text-center text-xs text-dark-base sm:text-sm dark:text-light-base">
+                                    {Math.round(scale * 100)}%
+                                </div>
 
                                 <button
                                     onClick={zoomIn}
                                     disabled={scale >= 3.0}
-                                    className="rounded bg-gray-100 p-2 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:hover:bg-gray-600"
+                                    className="rounded p-1.5 transition-colors hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50 sm:p-2 dark:hover:bg-gray-600"
+                                    title="Perbesar"
+                                >
+                                    <ZoomIn className="h-3 w-3 sm:h-4 sm:w-4" />
+                                </button>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex items-center gap-1 sm:gap-2">
+                                <button
+                                    onClick={() => downloadMagazine(selectedMagazine)}
+                                    className="rounded-lg bg-blue-imphnen-base p-1.5 text-white shadow-md transition-colors hover:bg-blue-imphnen-secondary sm:p-2"
+                                    title="Download PDF"
+                                >
+                                    <Download className="h-3 w-3 sm:h-4 sm:w-4" />
+                                </button>
+
+                                <button
+                                    onClick={closePDFViewer}
+                                    className="rounded-lg bg-red-500 p-1.5 text-white shadow-md transition-colors hover:bg-red-600 sm:p-2"
+                                    title="Tutup"
+                                >
+                                    <X className="h-3 w-3 sm:h-4 sm:w-4" />
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* PDF Content - Improved Responsive Layout */}
+                    <div className="flex-1 overflow-hidden bg-gray-200 dark:bg-gray-800">
+                        <div className="scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 dark:scrollbar-thumb-gray-600 dark:scrollbar-track-gray-700 h-full overflow-auto">
+                            <div className="flex min-h-full items-start justify-center p-2 sm:p-4">
+                                {loading && (
+                                    <div className="flex h-full items-center justify-center">
+                                        <div className="flex flex-col items-center gap-3">
+                                            <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-white"></div>
+                                            <div className="text-sm text-white">Memuat PDF...</div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div className="w-full max-w-4xl">
+                                    <Document
+                                        file={`/storage/${selectedMagazine.file}`}
+                                        onLoadSuccess={onDocumentLoadSuccess}
+                                        onLoadError={onDocumentLoadError}
+                                        loading={
+                                            <div className="flex h-96 items-center justify-center rounded-lg bg-white shadow-lg">
+                                                <div className="flex flex-col items-center gap-3">
+                                                    <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
+                                                    <div className="text-sm text-gray-600">Memuat halaman...</div>
+                                                </div>
+                                            </div>
+                                        }
+                                        className="flex justify-center"
+                                    >
+                                        <div className="relative">
+                                            <Page
+                                                pageNumber={pageNumber}
+                                                scale={scale}
+                                                className="overflow-hidden rounded-lg bg-white shadow-xl"
+                                                loading={
+                                                    <div className="flex h-96 w-full items-center justify-center rounded-lg bg-white shadow-lg">
+                                                        <div className="flex flex-col items-center gap-3">
+                                                            <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
+                                                            <div className="text-sm text-gray-600">Memuat halaman...</div>
+                                                        </div>
+                                                    </div>
+                                                }
+                                                renderTextLayer={true}
+                                                renderAnnotationLayer={true}
+                                            />
+
+                                            {/* Page Navigation Overlay - Mobile */}
+                                            <div className="absolute inset-0 flex md:hidden">
+                                                {/* Left tap area */}
+                                                <button
+                                                    onClick={previousPage}
+                                                    disabled={pageNumber <= 1}
+                                                    className="flex-1 bg-black opacity-0 transition-opacity hover:opacity-10 disabled:cursor-not-allowed"
+                                                    aria-label="Halaman Sebelumnya"
+                                                />
+
+                                                {/* Right tap area */}
+                                                <button
+                                                    onClick={nextPage}
+                                                    disabled={pageNumber >= (numPages || 0)}
+                                                    className="flex-1 bg-black opacity-0 transition-opacity hover:opacity-10 disabled:cursor-not-allowed"
+                                                    aria-label="Halaman Selanjutnya"
+                                                />
+                                            </div>
+                                        </div>
+                                    </Document>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Mobile Bottom Navigation - Optional */}
+                    <div className="block border-t border-gray-200 bg-white p-3 sm:hidden dark:border-gray-700 dark:bg-gray-800">
+                        <div className="flex items-center justify-between">
+                            <button
+                                onClick={previousPage}
+                                disabled={pageNumber <= 1}
+                                className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-white"
+                            >
+                                <ChevronLeft className="h-4 w-4" />
+                                Sebelumnya
+                            </button>
+
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={zoomOut}
+                                    disabled={scale <= 0.5}
+                                    className="rounded-lg bg-gray-100 p-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700"
+                                >
+                                    <ZoomOut className="h-4 w-4" />
+                                </button>
+
+                                <span className="text-sm font-medium">{Math.round(scale * 100)}%</span>
+
+                                <button
+                                    onClick={zoomIn}
+                                    disabled={scale >= 3.0}
+                                    className="rounded-lg bg-gray-100 p-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700"
                                 >
                                     <ZoomIn className="h-4 w-4" />
                                 </button>
                             </div>
 
-                            {/* Download */}
                             <button
-                                onClick={() => downloadMagazine(selectedMagazine)}
-                                className="rounded bg-blue-imphnen-base p-2 text-white hover:bg-blue-imphnen-secondary"
+                                onClick={nextPage}
+                                disabled={pageNumber >= (numPages || 0)}
+                                className="flex items-center gap-2 rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50 dark:bg-gray-700 dark:text-white"
                             >
-                                <Download className="h-4 w-4" />
-                            </button>
-
-                            {/* Close */}
-                            <button onClick={closePDFViewer} className="rounded bg-red-500 p-2 text-white hover:bg-red-600">
-                                <X className="h-4 w-4" />
+                                Selanjutnya
+                                <ChevronRight className="h-4 w-4" />
                             </button>
                         </div>
                     </div>
 
-                    {/* PDF Content */}
-                    <div className="flex flex-1 items-start justify-center overflow-auto bg-gray-100 p-4 dark:bg-gray-900">
-                        {loading && (
-                            <div className="flex h-full items-center justify-center">
-                                <div className="text-white">Loading PDF...</div>
-                            </div>
-                        )}
-
-                        <Document
-                            file={selectedMagazine.file}
-                            onLoadSuccess={onDocumentLoadSuccess}
-                            onLoadError={onDocumentLoadError}
-                            loading={
-                                <div className="flex h-full items-center justify-center text-white">
-                                    <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-white"></div>
-                                </div>
-                            }
-                            className="max-w-full"
-                        >
-                            <Page
-                                pageNumber={pageNumber}
-                                scale={scale}
-                                className="shadow-lg"
-                                loading={
-                                    <div className="flex h-96 items-center justify-center bg-white">
-                                        <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-blue-500"></div>
-                                    </div>
-                                }
-                            />
-                        </Document>
+                    {/* Keyboard Navigation Hint */}
+                    <div className="absolute bottom-4 left-4 hidden rounded-lg bg-black/70 px-3 py-2 text-xs text-white sm:block">
+                        <div className="flex items-center gap-4">
+                            <span>← → Navigasi</span>
+                            <span>+ - Zoom</span>
+                            <span>Esc Tutup</span>
+                        </div>
                     </div>
                 </motion.div>
             )}
