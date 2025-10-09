@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -17,6 +16,7 @@ class DatabaseSeeder extends Seeder
             FundSeeder::class,
             DivisionSeeder::class,
             RoleAndPermissionSeeder::class,
+            DownloadableSeeder::class,
             Informatics2021Seeder::class,
             Informatics2022Seeder::class,
             Informatics2023Seeder::class,
@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             IltekWorkProgramSeeder::class,
             KreusWorkProgramSeeder::class,
             MedkominfoWorkProgramSeeder::class,
-            MikatWorkProgramSeeder::class
+            MikatWorkProgramSeeder::class,
         ]);
     }
 }

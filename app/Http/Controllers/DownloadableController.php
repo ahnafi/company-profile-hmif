@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Download;
 
 class DownloadableController extends Controller
 {
-    //
+    public function index()
+    {
+        $downloads = Download::all();
+
+        return inertia('download', compact('downloads'));
+    }
 }

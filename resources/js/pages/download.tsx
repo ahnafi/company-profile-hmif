@@ -25,66 +25,7 @@ const typeLabels = {
     link: 'Link Eksternal',
 };
 
-// Data dummy - ganti dengan data dari props
-const dummyDownloads: Download[] = [
-    {
-        id: 1,
-        name: 'Panduan Akademik Teknik Informatika 2024',
-        description:
-            'Buku panduan lengkap untuk mahasiswa baru Teknik Informatika tahun 2024, berisi informasi kurikulum, mata kuliah, dan ketentuan akademik.',
-        file: '/downloads/panduan-akademik-2024.pdf',
-        link: null,
-        created_at: '2024-01-15T10:30:00.000000Z',
-        updated_at: '2024-01-15T10:30:00.000000Z',
-    },
-    {
-        id: 2,
-        name: 'Template Laporan Tugas Akhir',
-        description: 'Template resmi untuk penulisan laporan tugas akhir/skripsi sesuai dengan format yang ditetapkan oleh program studi.',
-        file: '/downloads/template-ta.docx',
-        link: null,
-        created_at: '2024-02-01T14:15:00.000000Z',
-        updated_at: '2024-02-01T14:15:00.000000Z',
-    },
-    {
-        id: 3,
-        name: 'Formulir Pendaftaran Seminar Proposal',
-        description: 'Formulir yang harus diisi untuk mendaftar seminar proposal tugas akhir.',
-        file: '/downloads/form-seminar-proposal.pdf',
-        link: null,
-        created_at: '2024-02-10T09:45:00.000000Z',
-        updated_at: '2024-02-10T09:45:00.000000Z',
-    },
-    {
-        id: 4,
-        name: 'Link Repository GitHub HMIF',
-        description: 'Akses ke repository GitHub resmi HMIF Unsoed yang berisi berbagai project dan kode sumber.',
-        file: null,
-        link: 'https://github.com/hmif-unsoed',
-        created_at: '2024-01-20T16:20:00.000000Z',
-        updated_at: '2024-01-20T16:20:00.000000Z',
-    },
-    {
-        id: 5,
-        name: 'Silabus Mata Kuliah Semester Genap 2024',
-        description: 'Dokumen silabus lengkap untuk semua mata kuliah yang dibuka pada semester genap 2024.',
-        file: '/downloads/silabus-genap-2024.pdf',
-        link: null,
-        created_at: '2024-01-30T11:00:00.000000Z',
-        updated_at: '2024-01-30T11:00:00.000000Z',
-    },
-    {
-        id: 6,
-        name: 'E-Learning Portal Unsoed',
-        description: 'Akses langsung ke portal e-learning Universitas Jenderal Soedirman untuk mengakses materi kuliah online.',
-        file: null,
-        link: 'https://elearning.unsoed.ac.id',
-        created_at: '2024-01-10T08:30:00.000000Z',
-        updated_at: '2024-01-10T08:30:00.000000Z',
-    },
-];
-
-export default function DownloadPage({ downloads = dummyDownloads }: DownloadProps) {
+export default function DownloadPage({ downloads }: DownloadProps) {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedType, setSelectedType] = useState<'all' | 'file' | 'link'>('all');
 
@@ -247,18 +188,18 @@ export default function DownloadPage({ downloads = dummyDownloads }: DownloadPro
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="outline" className="min-w-[180px] justify-between">
-                                        {selectedType === 'all' ? 'Semua Program Studi' : typeLabels[selectedType]}
+                                        {selectedType === 'all' ? 'Semua Tipe' : typeLabels[selectedType]}
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
                                     <DropdownMenuCheckboxItem checked={selectedType === 'all'} onCheckedChange={() => setSelectedType('all')}>
-                                        Semua Program Studi
+                                        Semua Tipe
                                     </DropdownMenuCheckboxItem>
                                     <DropdownMenuCheckboxItem checked={selectedType === 'file'} onCheckedChange={() => setSelectedType('file')}>
-                                        Teknik Informatika
+                                        File Download
                                     </DropdownMenuCheckboxItem>
                                     <DropdownMenuCheckboxItem checked={selectedType === 'link'} onCheckedChange={() => setSelectedType('link')}>
-                                        Teknik Komputer
+                                        Link Eksternal
                                     </DropdownMenuCheckboxItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
