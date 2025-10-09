@@ -3,71 +3,18 @@ import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { ChevronLeft, ChevronRight, X, Instagram } from 'lucide-react';
 import { useEffect, useState, useRef } from 'react';
+import committees from '@/data/structure-organization';
 
 interface CommitteeMember {
     id: number;
     name: string;
-    memberName: string;
+    leader: string;
     description: string;
     image: string;
     imageBackground: string;
     instagram?: string;
     staff?: string[];
 }
-
-// Data dummy - ganti dengan data sebenarnya
-const committees: CommitteeMember[] = [
-    {
-        id: 1,
-        name: 'Ketua Himpunan',
-        memberName: 'Muhammad Ilham Rafiqi',
-        description: 'Memimpin dan mengkoordinasikan seluruh kegiatan organisasi HMIF Unsoed dengan visi dan misi yang jelas.',
-        image: '/img/committees/kahim.png',
-        imageBackground: '/img/backgrounds/divisi-bph.png',
-        instagram: 'johndoe',
-        staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4', 'Staff 5']
-    },
-    {
-        id: 2,
-        name: 'Wakil Ketua Himpunan',
-        memberName: 'Wakil Ketua Himpunan',
-        description: 'Mendampingi ketua umum dalam menjalankan tugas dan tanggung jawab organisasi.',
-        image: '/img/committees/wakahim.png',
-        imageBackground: '/img/backgrounds/divisi-bph.png',
-        instagram: 'johndoe',
-        staff: ['Staff 1', 'Staff 2', 'Staff 3', 'Staff 4', 'Staff 5']
-    },
-    {
-        id: 3,
-        name: 'Koordinator Sekretaris',
-        memberName: 'Ayu Fitrianingsih',
-        description: 'Mengelola administrasi dan dokumentasi organisasi dengan rapi dan terstruktur.',
-        image: '/img/committees/koor-sekretaris.png',
-        imageBackground: '/img/backgrounds/divisi-bph.png',
-        instagram: 'janesmith',
-        staff: ['Staff A', 'Staff B', 'Staff C']
-    },
-    {
-        id: 4,
-        name: 'Koordinator Bendahara',
-        memberName: 'Fina Julianti',
-        description: 'Mengelola keuangan organisasi dengan transparan dan akuntabel.',
-        image: '/img/committees/koor-bendahara.png',
-        imageBackground: '/img/backgrounds/divisi-bph.png',
-        instagram: 'janesmith',
-        staff: ['Staff A', 'Staff B', 'Staff C']
-    },
-    {
-        id: 5,
-        name: 'Koordinator Medkominfo',
-        memberName: 'Nadzare Kafah Alfatiha',
-        description: 'Mengelola media dan informasi organisasi dengan efektif dan inovatif.',
-        image: '/img/committees/koor-medkominfo.png',
-        imageBackground: '/img/backgrounds/divisi-medkominfo.png',
-        instagram: 'janesmith',
-        staff: ['Staff A', 'Staff B', 'Staff C']
-    },
-];
 
 export default function OrganizationStructure() {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -277,7 +224,7 @@ export default function OrganizationStructure() {
                                         }}
                                         transition={{ duration: 1, delay: 0.4, ease: [0.4, 0, 0.2, 1] }}
                                     >
-                                        {committee.memberName}
+                                        {committee.leader}
                                     </motion.h2>
                                     
                                     <motion.p 
@@ -334,7 +281,7 @@ export default function OrganizationStructure() {
                                     
                                     <motion.img
                                         src={committee.image}
-                                        alt={committee.memberName}
+                                        alt={committee.leader}
                                         className="profile-image w-74 h-auto absolute -right-96 -bottom-37.5 -z-1 rounded-lg"
                                         initial={{ opacity: 0, x: 100 }}
                                         animate={activeIndex === index ? { 
