@@ -2,12 +2,12 @@ import Layout from '@/components/layout';
 import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import { BookOpen, Calendar, ChevronLeft, ChevronRight, Download, Eye, Search, X, ZoomIn, ZoomOut } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
-// Set up PDF.js worker
+// Set up PDF.js worker - Updated to match version 4.8.69
 pdfjs.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 interface Magazine {
@@ -22,6 +22,64 @@ interface Magazine {
 
 interface IMagzProps {
     magazines: Magazine[];
+}
+
+// PDF Thumbnail Component
+function PDFThumbnail({ file }: { file: string }) {
+    const [numPages, setNumPages] = useState<number | null>(null);
+    const [error, setError] = useState(false);
+
+    const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+        setNumPages(numPages);
+        setError(false);
+    };
+
+    const onDocumentLoadError = () => {
+        setError(true);
+    };
+
+    if (error) {
+        return (
+            <div className="relative flex h-64 items-center justify-center bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary">
+                <BookOpen className="h-16 w-16 text-white/80" />
+                <div className="absolute inset-0 bg-black/20"></div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="relative h-64 overflow-hidden bg-gray-100 dark:bg-gray-700">
+            <div className="flex h-full items-center justify-center">
+                <Document
+                    file={`/storage/${file}`}
+                    onLoadSuccess={onDocumentLoadSuccess}
+                    onLoadError={onDocumentLoadError}
+                    loading={
+                        <div className="flex h-64 items-center justify-center bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary">
+                            <div className="flex flex-col items-center gap-2">
+                                <div className="h-8 w-8 animate-spin rounded-full border-b-2 border-white"></div>
+                                <span className="text-sm text-white">Memuat preview...</span>
+                            </div>
+                        </div>
+                    }
+                    className="flex justify-center"
+                >
+                    <Page
+                        pageNumber={1}
+                        width={300}
+                        renderTextLayer={false}
+                        renderAnnotationLayer={false}
+                        className="shadow-lg"
+                    />
+                </Document>
+            </div>
+            {numPages && (
+                <div className="absolute top-2 right-2 rounded-full bg-black/60 px-3 py-1 text-xs text-white backdrop-blur-sm">
+                    {numPages} halaman
+                </div>
+            )}
+        </div>
+    );
 }
 
 export default function IMagzPage({ magazines }: IMagzProps) {
@@ -67,39 +125,39 @@ export default function IMagzPage({ magazines }: IMagzProps) {
         });
     };
 
-    const closePDFViewer = () => {
+    const closePDFViewer = useCallback(() => {
         setShowPDFViewer(false);
         setSelectedMagazine(null);
         setNumPages(null);
         setPageNumber(1);
         setLoading(false);
-    };
+    }, []);
 
-    const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    const onDocumentLoadSuccess = useCallback(({ numPages }: { numPages: number }) => {
         setNumPages(numPages);
         setLoading(false);
-    };
+    }, []);
 
-    const onDocumentLoadError = (error: Error) => {
+    const onDocumentLoadError = useCallback((error: Error) => {
         console.error('Error loading PDF:', error);
         setLoading(false);
-    };
+    }, []);
 
-    const previousPage = () => {
+    const previousPage = useCallback(() => {
         setPageNumber((prev) => Math.max(prev - 1, 1));
-    };
+    }, []);
 
-    const nextPage = () => {
+    const nextPage = useCallback(() => {
         setPageNumber((prev) => Math.min(prev + 1, numPages || 1));
-    };
+    }, [numPages]);
 
-    const zoomIn = () => {
+    const zoomIn = useCallback(() => {
         setScale((prev) => Math.min(prev + 0.25, 3.0));
-    };
+    }, []);
 
-    const zoomOut = () => {
+    const zoomOut = useCallback(() => {
         setScale((prev) => Math.max(prev - 0.25, 0.5));
-    };
+    }, []);
 
     const downloadMagazine = (magazine: Magazine) => {
         const link = document.createElement('a');
@@ -142,7 +200,7 @@ export default function IMagzPage({ magazines }: IMagzProps) {
 
         document.addEventListener('keydown', handleKeyPress);
         return () => document.removeEventListener('keydown', handleKeyPress);
-    }, [showPDFViewer, pageNumber, numPages, scale]);
+    }, [showPDFViewer, pageNumber, numPages, scale, previousPage, nextPage, zoomIn, zoomOut, closePDFViewer]);
 
     // Tambahkan responsive scale default
     const getResponsiveScale = () => {
@@ -262,12 +320,12 @@ export default function IMagzPage({ magazines }: IMagzProps) {
                                         transition={{ duration: 0.6, delay: index * 0.1 }}
                                         className="group overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
                                     >
-                                        {/* Magazine Cover Placeholder */}
-                                        <div className="relative flex h-64 items-center justify-center bg-gradient-to-br from-blue-imphnen-base to-blue-imphnen-secondary">
-                                            <BookOpen className="h-16 w-16 text-white/80" />
-                                            <div className="absolute inset-0 bg-black/20"></div>
+                                        {/* Magazine Cover with PDF Preview */}
+                                        <div className="relative">
+                                            <PDFThumbnail file={magazine.file} />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                                             <div className="absolute right-4 bottom-4 left-4">
-                                                <h3 className="text-lg leading-tight font-bold text-white">{magazine.title}</h3>
+                                                <h3 className="text-lg leading-tight font-bold text-white drop-shadow-lg">{magazine.title}</h3>
                                             </div>
                                         </div>
 

@@ -25,15 +25,17 @@ class MagazineResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('file')
-                    ->label('File')
-                    ->maxSize(2048)
+                    ->label('File PDF')
+                    ->acceptedFileTypes(['application/pdf'])
+                    ->maxSize(10240) // 10MB
                     ->directory('magazines')
                     ->openable()
                     ->columnSpanFull()
                     ->downloadable()
                     ->preserveFilenames()
                     ->previewable()
-                    ->required(),
+                    ->required()
+                    ->helperText('Upload file PDF dengan maksimal ukuran 10MB'),
                 Forms\Components\TextInput::make('title')
                     ->label('Judul')
                     ->required(),
