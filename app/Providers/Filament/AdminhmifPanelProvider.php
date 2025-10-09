@@ -28,6 +28,8 @@ class AdminhmifPanelProvider extends PanelProvider
             ->path('adminhmif')
             ->favicon(asset('logo.svg'))
             ->brandLogo(asset('logo.svg'))
+            ->profile(isSimple: false)
+            ->passwordReset()
             ->login()
             ->colors([
                 'primary' => Color::Amber,

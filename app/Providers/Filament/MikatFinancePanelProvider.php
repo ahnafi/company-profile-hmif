@@ -30,6 +30,8 @@ class MikatFinancePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->profile(isSimple: false)
+            ->passwordReset()
             ->discoverResources(in: app_path('Filament/MikatFinance/Resources'), for: 'App\\Filament\\MikatFinance\\Resources')
             ->discoverPages(in: app_path('Filament/MikatFinance/Pages'), for: 'App\\Filament\\MikatFinance\\Pages')
             ->pages([

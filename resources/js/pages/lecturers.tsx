@@ -339,11 +339,11 @@ export default function Labor({ lecturers }: LaborProps) {
                         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
                             <div className="flex items-center gap-2 rounded-lg bg-white px-6 py-3 shadow-sm dark:bg-gray-800">
                                 <Mail className="h-5 w-5 text-blue-imphnen-base" />
-                                <span className="text-sm">fakultas.teknik@unsoed.ac.id</span>
+                                <span className="text-sm">ft@unsoed.ac.id</span>
                             </div>
                             <div className="flex items-center gap-2 rounded-lg bg-white px-6 py-3 shadow-sm dark:bg-gray-800">
                                 <Phone className="h-5 w-5 text-blue-imphnen-base" />
-                                <span className="text-sm">(0281) 641629</span>
+                                <span className="text-sm">(0281) 6596700</span>
                             </div>
                         </div>
                     </motion.div>

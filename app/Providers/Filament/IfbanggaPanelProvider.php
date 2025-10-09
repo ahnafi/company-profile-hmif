@@ -30,6 +30,8 @@ class IfbanggaPanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->profile(isSimple: false)
+            ->passwordReset()
             ->databaseNotifications()
             ->login()
             ->discoverResources(in: app_path('Filament/Ifbangga/Resources'), for: 'App\\Filament\\Ifbangga\\Resources')

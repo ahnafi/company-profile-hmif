@@ -30,6 +30,8 @@ class IltekFinancePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->profile(isSimple: false)
+            ->passwordReset()
             ->login()
             ->discoverResources(in: app_path('Filament/IltekFinance/Resources'), for: 'App\\Filament\\IltekFinance\\Resources')
             ->discoverPages(in: app_path('Filament/IltekFinance/Pages'), for: 'App\\Filament\\IltekFinance\\Pages')

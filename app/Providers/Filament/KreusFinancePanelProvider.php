@@ -30,6 +30,8 @@ class KreusFinancePanelProvider extends PanelProvider
             ->colors([
                 'primary' => Color::Amber,
             ])
+            ->profile(isSimple: false)
+            ->passwordReset()
             ->login()
             ->discoverResources(in: app_path('Filament/KreusFinance/Resources'), for: 'App\\Filament\\KreusFinance\\Resources')
             ->discoverPages(in: app_path('Filament/KreusFinance/Pages'), for: 'App\\Filament\\KreusFinance\\Pages')
