@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 // Company Profile
 Route::controller(CompanyProfileController::class)->group(function () {
-    Route::get('/', fn () => inertia('welcome'))->name('home');
+    Route::get('/', "index")->name('home');
     Route::get('/visi-misi', fn () => inertia('about-hmif/vision-mission'))->name('vision.mission');
 });
 

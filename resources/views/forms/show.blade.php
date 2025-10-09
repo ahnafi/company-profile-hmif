@@ -27,7 +27,7 @@
                 @if($form->end_date)
                     <div class="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-md">
                         <p class="text-sm text-yellow-800">
-                            <strong>Deadline:</strong> {{ $form->end_date->format('d M Y, H:i') }}
+                            <strong>Ditutup:</strong> {{ $form->end_date->format('d M Y, H:i') }}
                         </p>
                     </div>
                 @endif
