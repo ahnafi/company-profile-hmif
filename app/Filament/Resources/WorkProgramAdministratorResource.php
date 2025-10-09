@@ -17,7 +17,8 @@ class WorkProgramAdministratorResource extends Resource
 {
     protected static ?string $model = WorkProgramAdministrator::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
+    protected static ?string $navigationLabel = 'Program Kerja';
     protected static ?string $navigationGroup = 'Struktur Organisasi';
 
     public static function form(Form $form): Form
@@ -25,6 +26,7 @@ class WorkProgramAdministratorResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('position')
+                    ->label('Posisi')
                     ->options([
                         'Ketua' => 'Ketua',
                         'Wakil' => 'Wakil',
@@ -33,9 +35,11 @@ class WorkProgramAdministratorResource extends Resource
                     ])
                     ->required(),
                 Forms\Components\Select::make('work_program_id')
+                    ->label('Program Kerja')
                     ->relationship('workProgram', 'name')
                     ->required(),
                 Forms\Components\Select::make('administrator_id')
+                    ->label('Pengurus')
                     ->relationship('administrator', 'name')
                     ->required(),
             ]);
@@ -46,18 +50,23 @@ class WorkProgramAdministratorResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('position')
+                    ->label('Posisi')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('workProgram.name')
+                    ->label('Program Kerja')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('administrator.name')
+                    ->label('Pengurus')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

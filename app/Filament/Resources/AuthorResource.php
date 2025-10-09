@@ -17,7 +17,8 @@ class AuthorResource extends Resource
 {
     protected static ?string $model = Author::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-circle';
+    protected static ?string $navigationLabel = 'Penulis';
     protected static ?string $navigationGroup = 'Manajemen Artikel';
 
     public static function form(Form $form): Form
@@ -25,13 +26,16 @@ class AuthorResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama')
                     ->required(),
                 Forms\Components\FileUpload::make('avatar')
+                    ->label('Avatar')
                     ->imageEditor()
                     ->image()
                     ->directory('avatars')
                     ->avatar(),
-                Forms\Components\Textarea::make('bio'),
+                Forms\Components\Textarea::make('bio')
+                    ->label('Bio'),
             ]);
     }
 
@@ -40,18 +44,23 @@ class AuthorResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable(),
                 Tables\Columns\ImageColumn::make('avatar')
+                    ->label('Avatar')
                     ->circular(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
+                    ->label('Dihapus Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

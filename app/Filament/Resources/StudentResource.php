@@ -17,7 +17,8 @@ class StudentResource extends Resource
 {
     protected static ?string $model = Student::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-academic-cap';
+    protected static ?string $navigationLabel = 'Mahasiswa';
     protected static ?string $navigationGroup = 'Database IF Bangga';
 
     public static function form(Form $form): Form
@@ -25,18 +26,23 @@ class StudentResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama')
                     ->required(),
                 Forms\Components\TextInput::make('nim')
+                    ->label('NIM')
                     ->required(),
                 Forms\Components\FileUpload::make('image')
+                    ->label('Foto')
                     ->image(),
                 Forms\Components\Select::make('study_program')
+                    ->label('Program Studi')
                 ->options([
-                    'informatics' => 'Informatics',
-                    'computer_engineering' => 'Computer Engineering',
+                    'informatics' => 'Informatika',
+                    'computer_engineering' => 'Teknik Komputer',
                 ])
                     ->required(),
                 Forms\Components\TextInput::make('batch_year')
+                    ->label('Tahun Angkatan')
                     ->numeric()
                     ->minValue(2020)
                     ->required(),
@@ -48,19 +54,26 @@ class StudentResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nim')
+                    ->label('NIM')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Foto'),
                 Tables\Columns\TextColumn::make('study_program')
+                    ->label('Program Studi')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('batch_year')
+                    ->label('Tahun Angkatan')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

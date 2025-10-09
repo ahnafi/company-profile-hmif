@@ -17,7 +17,8 @@ class AchievementTypeResource extends Resource
 {
     protected static ?string $model = AchievementType::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
+    protected static ?string $navigationLabel = 'Tipe Prestasi';
     protected static ?string $navigationGroup = 'Database IF Bangga';
 
     public static function form(Form $form): Form
@@ -25,6 +26,7 @@ class AchievementTypeResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama Tipe')
                     ->required(),
             ]);
     }
@@ -34,12 +36,15 @@ class AchievementTypeResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Tipe')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

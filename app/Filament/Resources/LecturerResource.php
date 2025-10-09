@@ -17,7 +17,8 @@ class LecturerResource extends Resource
 {
     protected static ?string $model = Lecturer::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
+    protected static ?string $navigationLabel = 'Dosen';
     protected static ?string $navigationGroup = "Manajemen Dosen";
 
     public static function form(Form $form): Form
@@ -25,15 +26,19 @@ class LecturerResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('image')
+                    ->label('Foto')
                     ->directory('lecturer-images')
                     ->image()
                     ->columnSpanFull()
                     ->required(),
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama')
                     ->required(),
                 Forms\Components\TextInput::make('nip')
+                    ->label('NIP')
                     ->required(),
                 Forms\Components\Select::make('type')
+                    ->label('Program Studi')
                     ->options([
                         "informatics" => "Informatika",
                         "computer_engineering" => "Teknik Komputer"
@@ -47,21 +52,28 @@ class LecturerResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('nip')
+                    ->label('NIP')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')
+                    ->label('Foto'),
                 Tables\Columns\TextColumn::make('type')
+                    ->label('Program Studi')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
+                    ->label('Dihapus Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

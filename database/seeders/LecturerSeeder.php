@@ -102,7 +102,7 @@ class LecturerSeeder extends Seeder
             [
                 "name" => "Mochamad Agri Triansyah, S.Kom., M.Kom",
                 "nip" => "199408122023211023",
-                "image" => "lecturer-images/mochamad-agri-triansyah.png",
+                "image" => "lecturer-images/mochamad-agri-triansyah.jpg",
                 "type" => "computer_engineering",
             ],
             [

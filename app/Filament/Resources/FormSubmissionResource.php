@@ -24,12 +24,10 @@ class FormSubmissionResource extends Resource
     protected static ?string $model = FormSubmission::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-inbox-stack';
-    
+    protected static ?string $navigationLabel = 'Hasil Pengisian';
     protected static ?string $navigationGroup = 'Form Builder';
     
     protected static ?int $navigationSort = 2;
-    
-    protected static ?string $navigationLabel = 'Submissions';
 
     public static function form(FilamentForm $form): FilamentForm
     {
@@ -48,35 +46,35 @@ class FormSubmissionResource extends Resource
                     ->sortable(),
                 
                 TextColumn::make('form.title')
-                    ->label('Form')
+                    ->label('Formulir')
                     ->searchable()
                     ->sortable(),
                 
                 TextColumn::make('submitted_by_name')
-                    ->label('Name')
+                    ->label('Nama')
                     ->searchable()
-                    ->placeholder('Anonymous'),
+                    ->placeholder('Anonim'),
                 
                 TextColumn::make('submitted_by_email')
                     ->label('Email')
                     ->searchable()
-                    ->placeholder('Not provided'),
+                    ->placeholder('Tidak tersedia'),
                 
                 TextColumn::make('submitted_by_phone')
-                    ->label('Phone')
-                    ->placeholder('Not provided'),
+                    ->label('Telepon')
+                    ->placeholder('Tidak tersedia'),
                 
                 TextColumn::make('ip_address')
-                    ->label('IP Address'),
+                    ->label('Alamat IP'),
                 
                 TextColumn::make('created_at')
-                    ->label('Submitted At')
+                    ->label('Diisi Pada')
                     ->dateTime()
                     ->sortable(),
             ])
             ->filters([
                 SelectFilter::make('form_id')
-                    ->label('Form')
+                    ->label('Formulir')
                     ->options(Form::pluck('title', 'id'))
                     ->searchable(),
             ])

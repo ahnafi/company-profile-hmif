@@ -16,8 +16,8 @@ class MagazineResource extends Resource
 {
     protected static ?string $model = Magazine::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-book-open';
+    protected static ?string $navigationLabel = 'Majalah';
     protected static ?string $navigationGroup = 'Manajemen I-Magz';
 
     public static function form(Form $form): Form
@@ -25,6 +25,7 @@ class MagazineResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('file')
+                    ->label('File')
                     ->maxSize(2048)
                     ->directory('magazines')
                     ->openable()
@@ -34,8 +35,10 @@ class MagazineResource extends Resource
                     ->previewable()
                     ->required(),
                 Forms\Components\TextInput::make('title')
+                    ->label('Judul')
                     ->required(),
-                Forms\Components\Textarea::make('description'),
+                Forms\Components\Textarea::make('description')
+                    ->label('Deskripsi'),
             ]);
     }
 
@@ -44,20 +47,26 @@ class MagazineResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                    ->label('Judul')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
+                    ->label('Slug')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('file')
+                    ->label('File')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
+                    ->label('Dihapus Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

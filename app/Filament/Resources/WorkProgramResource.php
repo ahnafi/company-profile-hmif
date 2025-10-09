@@ -17,7 +17,8 @@ class WorkProgramResource extends Resource
 {
     protected static ?string $model = WorkProgram::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-briefcase';
+    protected static ?string $navigationLabel = 'Program Kerja';
     protected static ?string $navigationGroup = 'Struktur Organisasi';
 
     public static function form(Form $form): Form
@@ -25,13 +26,17 @@ class WorkProgramResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama Program')
                     ->required(),
                 Forms\Components\Select::make('division_id')
+                    ->label('Divisi')
                     ->relationship('division', 'name')
                     ->required(),
                 Forms\Components\RichEditor::make('description')
+                    ->label('Deskripsi')
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('images')
+                    ->label('Gambar')
                     ->directory('work_program')
                     ->previewable()
                     ->image()
@@ -46,15 +51,19 @@ class WorkProgramResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Program')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('division.name')
+                    ->label('Divisi')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('type')
+                    ->label('Tipe')
                     ->badge()
                     ->formatStateUsing(fn (string $state): string => match ($state) {
                         'work_program' => 'Program Kerja',
@@ -67,6 +76,7 @@ class WorkProgramResource extends Resource
                         default => 'gray',
                     }),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

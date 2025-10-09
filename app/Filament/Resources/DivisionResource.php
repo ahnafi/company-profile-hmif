@@ -17,7 +17,8 @@ class DivisionResource extends Resource
 {
     protected static ?string $model = Division::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
+    protected static ?string $navigationLabel = 'Divisi';
     protected static ?string $navigationGroup = 'Struktur Organisasi';
 
     public static function form(Form $form): Form
@@ -25,12 +26,16 @@ class DivisionResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama Divisi')
                     ->required(),
                 Forms\Components\TextInput::make('slug')
+                    ->label('Slug')
                     ->required(),
                 Forms\Components\Textarea::make('description')
+                    ->label('Deskripsi')
                     ->columnSpanFull(),
                 Forms\Components\Textarea::make('images')
+                    ->label('Gambar')
                     ->columnSpanFull(),
             ]);
     }
@@ -40,18 +45,23 @@ class DivisionResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Divisi')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('slug')
+                    ->label('Slug')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
+                    ->label('Dihapus Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

@@ -16,8 +16,8 @@ class AchievementResource extends Resource
 {
     protected static ?string $model = Achievement::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
+    protected static ?string $navigationIcon = 'heroicon-o-trophy';
+    protected static ?string $navigationLabel = 'Prestasi';
     protected static ?string $navigationGroup = 'Database IF Bangga';
 
     public static function form(Form $form): Form
@@ -25,11 +25,13 @@ class AchievementResource extends Resource
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
+                    ->label('Nama Prestasi')
                     ->required(),
                 Forms\Components\TextInput::make('organizer')
-                    ->label('Organizer/Penyelenggara')
+                    ->label('Penyelenggara')
                     ->required(),
                 Forms\Components\Select::make('students')
+                    ->label('Mahasiswa')
                     ->relationship('students', 'nim')
                     ->getOptionLabelFromRecordUsing(fn ($record) => "{$record->nim} - {$record->name}")
                     ->searchable(['name', 'nim'])
@@ -37,9 +39,11 @@ class AchievementResource extends Resource
                     ->multiple()
                     ->required(),
                 Forms\Components\Textarea::make('description')
+                    ->label('Deskripsi')
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')
+                    ->label('Gambar')
                     ->openable()
                     ->downloadable()
                     ->directory('ifbangga-image')
@@ -47,22 +51,28 @@ class AchievementResource extends Resource
                     ->required()
                     ->columnSpanFull(),
                 Forms\Components\FileUpload::make('proof')
+                    ->label('Bukti')
                     ->openable()
                     ->downloadable()
                     ->directory('ifbangga-proof')
                     ->image()
                     ->columnSpanFull(),
-                Forms\Components\DatePicker::make('awarded_at'),
+                Forms\Components\DatePicker::make('awarded_at')
+                    ->label('Tanggal Penghargaan'),
                 Forms\Components\Select::make('achievement_type_id')
+                    ->label('Tipe Prestasi')
                     ->relationship('achievementType', 'name')
                     ->required(),
                 Forms\Components\Select::make('achievement_category_id')
+                    ->label('Kategori Prestasi')
                     ->relationship('achievementCategory', 'name')
                     ->required(),
                 Forms\Components\Select::make('achievement_level_id')
+                    ->label('Tingkat Prestasi')
                     ->relationship('achievementLevel', 'name')
                     ->required(),
                 Forms\Components\Toggle::make('approval')
+                    ->label('Persetujuan')
                     ->nullable(),
             ]);
     }
@@ -73,27 +83,34 @@ class AchievementResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 Tables\Columns\TextColumn::make('name')
+                    ->label('Nama Prestasi')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('organizer')
+                    ->label('Penyelenggara')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('students.nim')
-                    ->label('Students')
+                    ->label('Mahasiswa')
                     ->formatStateUsing(function ($state, $record) {
                         return $record->students->pluck('nim')->join(', ');
                     })
                     ->searchable(),
                 Tables\Columns\TextColumn::make('awarded_at')
+                    ->label('Tanggal Penghargaan')
                     ->date()
                     ->sortable(),
                 Tables\Columns\IconColumn::make('approval')
+                    ->label('Persetujuan')
                     ->boolean(),
                 Tables\Columns\TextColumn::make('achievementType.name')
+                    ->label('Tipe Prestasi')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('achievementCategory.name')
+                    ->label('Kategori Prestasi')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('achievementLevel.name')
+                    ->label('Tingkat Prestasi')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
@@ -101,6 +118,7 @@ class AchievementResource extends Resource
                     ->dateTime()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

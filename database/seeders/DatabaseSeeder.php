@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
             Informatics2025Seeder::class,
             ComputerEngineering2024Seeder::class,
             ComputerEngineering2025Seeder::class,
-            AchievementSeeder::class,
+            // AchievementSeeder::class,
             LecturerSeeder::class,
             ArticleSeeder::class,
             BPHWorkProgramSeeder::class,

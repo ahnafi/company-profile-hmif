@@ -17,7 +17,8 @@ class ArticleResource extends Resource
 {
     protected static ?string $model = Article::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+    protected static ?string $navigationLabel = 'Artikel';
     protected static ?string $navigationGroup = 'Manajemen Artikel';
 
     public static function form(Form $form): Form
@@ -25,30 +26,38 @@ class ArticleResource extends Resource
         return $form
             ->schema([
                 Forms\Components\FileUpload::make('thumbnail')
+                    ->label('Gambar Thumbnail')
                     ->image()
                     ->imageEditor()
                     ->columnSpanFull()
                     ->directory('thumbnails'),
                 Forms\Components\TextInput::make('title')
+                    ->label('Judul')
                     ->required(),
                 Forms\Components\Select::make('author_id')
+                    ->label('Penulis')
                     ->createOptionForm([
                         Forms\Components\TextInput::make('name')
+                            ->label('Nama')
                             ->required(),
                         Forms\Components\FileUpload::make('avatar')
+                            ->label('Avatar')
                             ->imageEditor()
                             ->image()
                             ->directory('avatars')
                             ->avatar(),
-                        Forms\Components\Textarea::make('bio'),
+                        Forms\Components\Textarea::make('bio')
+                            ->label('Bio'),
                     ])
                     ->searchable()
                     ->preload()
                     ->relationship('author', 'name')
                     ->required(),
                 Forms\Components\Select::make('category_id')
+                    ->label('Kategori')
                     ->createOptionForm([
                         Forms\Components\TextInput::make('name')
+                            ->label('Nama Kategori')
                             ->required(),
                     ])
                     ->searchable()
@@ -56,6 +65,7 @@ class ArticleResource extends Resource
                     ->relationship('category', 'name')
                     ->required(),
                 Forms\Components\RichEditor::make('content')
+                    ->label('Konten')
                     ->required()
                     ->columnSpanFull(),
             ]);
@@ -66,25 +76,28 @@ class ArticleResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('title')
+                    ->label('Judul')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('author.name')
+                    ->label('Penulis')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
+                    ->label('Dihapus Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('author.name')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('category.name')
+                    ->label('Kategori')
                     ->numeric()
                     ->sortable(),
             ])
