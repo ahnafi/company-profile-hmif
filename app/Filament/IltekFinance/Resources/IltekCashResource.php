@@ -17,7 +17,8 @@ class IltekCashResource extends Resource
 {
     protected static ?string $model = IltekCash::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationLabel = 'Kas Iltek';
 
     public static function form(Form $form): Form
     {

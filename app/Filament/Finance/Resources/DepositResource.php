@@ -17,7 +17,8 @@ class DepositResource extends Resource
 {
     protected static ?string $model = Deposit::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-credit-card';
+    protected static ?string $navigationLabel = 'Deposit';
     protected static ?string $navigationGroup = 'Kas dan Deposit';
 
     public static function form(Form $form): Form
@@ -25,6 +26,7 @@ class DepositResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('administrator_id')
+                    ->label('Pengurus')
                     ->relationship('administrator', 'name')
                     ->disabledOn("edit")
                     ->required(),
@@ -36,6 +38,7 @@ class DepositResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('administrator.name')
+                    ->label('Pengurus')
                     ->searchable()
                     ->description(fn($record) => $record->administrator?->division?->name)
                     ->sortable(),
@@ -115,14 +118,17 @@ class DepositResource extends Resource
                             ->money('IDR')
                     ]),
                 Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
+                    ->label('Diperbarui Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('deleted_at')
+                    ->label('Dihapus Pada')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

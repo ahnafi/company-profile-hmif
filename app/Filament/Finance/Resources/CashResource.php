@@ -17,7 +17,8 @@ class CashResource extends Resource
 {
     protected static ?string $model = Cash::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-wallet';
+    protected static ?string $navigationLabel = 'Kas';
     protected static ?string $navigationGroup = 'Kas dan Deposit';
 
     public static function form(Form $form): Form
@@ -25,6 +26,7 @@ class CashResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('administrator_id')
+                    ->label('Pengurus')
                     ->relationship('administrator', 'name')
                     ->disabledOn("edit")
                     ->required(),
@@ -46,6 +48,7 @@ class CashResource extends Resource
 
         $columns = [
             Tables\Columns\TextColumn::make('administrator.name')
+                ->label('Pengurus')
                 ->description(fn($record) => $record->administrator?->division?->name)
                 ->searchable()
                 ->sortable(),
@@ -85,14 +88,17 @@ class CashResource extends Resource
         // Add standard timestamp columns
         $columns = array_merge($columns, [
             Tables\Columns\TextColumn::make('created_at')
+                ->label('Dibuat Pada')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('updated_at')
+                ->label('Diperbarui Pada')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),
             Tables\Columns\TextColumn::make('deleted_at')
+                ->label('Dihapus Pada')
                 ->dateTime()
                 ->sortable()
                 ->toggleable(isToggledHiddenByDefault: true),

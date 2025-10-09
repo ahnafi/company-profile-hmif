@@ -17,7 +17,8 @@ class KreusCashResource extends Resource
 {
     protected static ?string $model = KreusCash::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationLabel = 'Kas Kreus';
     protected static ?string $navigationGroup = 'Kas Kreus';
 
     public static function form(Form $form): Form

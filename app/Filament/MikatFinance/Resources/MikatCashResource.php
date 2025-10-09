@@ -17,7 +17,8 @@ class MikatCashResource extends Resource
 {
     protected static ?string $model = MikatCash::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-currency-dollar';
+    protected static ?string $navigationLabel = 'Kas Mikat';
 
     public static function form(Form $form): Form
     {
