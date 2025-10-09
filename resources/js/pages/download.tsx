@@ -225,23 +225,25 @@ export default function DownloadPage({ downloads }: DownloadProps) {
                                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">Menampilkan {filteredDownloads.length} item</p>
                             </motion.div>
 
-                            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            <div className="space-y-3">
                                 {filteredDownloads.map((download, index) => (
                                     <motion.div
                                         key={download.id}
-                                        initial={{ opacity: 0, y: 30 }}
-                                        whileInView={{ opacity: 1, y: 0 }}
+                                        initial={{ opacity: 0, x: -30 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
                                         viewport={{ once: true }}
-                                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                                        className="group rounded-lg border border-gray-200 bg-white p-6 shadow-sm transition-all duration-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800"
+                                        transition={{ duration: 0.4, delay: index * 0.05 }}
+                                        className="group flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition-all duration-300 hover:border-blue-imphnen-base hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-blue-imphnen-secondary"
                                     >
-                                        {/* Header */}
-                                        <div className="mb-4 flex items-start gap-3">
-                                            <div className="flex-shrink-0 rounded-lg bg-gray-50 p-2 dark:bg-gray-700">
-                                                {getFileIcon(download.file || undefined)}
-                                            </div>
-                                            <div className="min-w-0 flex-1">
-                                                <h3 className="mb-1 line-clamp-2 font-semibold text-dark-base transition-colors duration-300 group-hover:text-blue-imphnen-base dark:text-light-base">
+                                        {/* File Icon */}
+                                        <div className="flex-shrink-0 rounded-lg bg-gray-50 p-3 dark:bg-gray-700">
+                                            {getFileIcon(download.file || undefined)}
+                                        </div>
+
+                                        {/* Content */}
+                                        <div className="min-w-0 flex-1">
+                                            <div className="mb-1 flex items-center gap-2">
+                                                <h3 className="font-semibold text-dark-base transition-colors duration-300 group-hover:text-blue-imphnen-base dark:text-light-base">
                                                     {download.name}
                                                 </h3>
                                                 {download.file && (
@@ -255,33 +257,29 @@ export default function DownloadPage({ downloads }: DownloadProps) {
                                                     </span>
                                                 )}
                                             </div>
-                                        </div>
-
-                                        {/* Description */}
-                                        {download.description && (
-                                            <p className="mb-4 line-clamp-3 text-sm text-gray-600 dark:text-gray-400">{download.description}</p>
-                                        )}
-
-                                        {/* Meta Info */}
-                                        <div className="mb-4 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                                            <Calendar className="h-3 w-3" />
-                                            <span>{formatDate(download.created_at)}</span>
+                                            {download.description && (
+                                                <p className="mb-2 line-clamp-1 text-sm text-gray-600 dark:text-gray-400">{download.description}</p>
+                                            )}
+                                            <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                                                <Calendar className="h-3 w-3" />
+                                                <span>{formatDate(download.created_at)}</span>
+                                            </div>
                                         </div>
 
                                         {/* Download Button */}
                                         <button
                                             onClick={() => handleDownload(download)}
-                                            className="flex w-full items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-blue-imphnen-base to-blue-imphnen-secondary px-4 py-3 text-sm font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-md focus:ring-2 focus:ring-blue-imphnen-base focus:ring-offset-2 focus:outline-none"
+                                            className="flex flex-shrink-0 items-center gap-2 rounded-lg bg-gradient-to-r from-blue-imphnen-base to-blue-imphnen-secondary px-4 py-2 text-sm font-medium text-white transition-all duration-300 hover:scale-105 hover:shadow-md focus:ring-2 focus:ring-blue-imphnen-base focus:ring-offset-2 focus:outline-none"
                                         >
                                             {download.file ? (
                                                 <>
                                                     <ArrowDown className="h-4 w-4" />
-                                                    Download File
+                                                    <span className="hidden sm:inline">Download</span>
                                                 </>
                                             ) : (
                                                 <>
                                                     <ExternalLink className="h-4 w-4" />
-                                                    Buka Link
+                                                    <span className="hidden sm:inline">Buka</span>
                                                 </>
                                             )}
                                         </button>
