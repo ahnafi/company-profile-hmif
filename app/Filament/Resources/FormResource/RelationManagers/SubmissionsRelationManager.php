@@ -16,8 +16,9 @@ use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\Section;
-use Filament\Tables\Actions\ExportAction;
-use Filament\Tables\Actions\ExportBulkAction;
+use Filament\Notifications\Notification;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\FormSubmissionsExcelExport;
 use App\Filament\Exports\FormSubmissionExporter;
 
 class SubmissionsRelationManager extends RelationManager
@@ -69,11 +70,21 @@ class SubmissionsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                ExportAction::make()
-                    ->exporter(FormSubmissionExporter::class)
-                    ->label('Export All')
+                Action::make('export')
+                    ->label('Export to Excel')
                     ->color('success')
-                    ->icon('heroicon-o-arrow-down-tray'),
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->action(function ($livewire) {
+                        $formId = $livewire->ownerRecord->id;
+                        $formTitle = $livewire->ownerRecord->title;
+                        
+                        $fileName = 'form-submissions-' . \Str::slug($formTitle) . '-' . now()->format('Y-m-d-His') . '.xlsx';
+                        
+                        return Excel::download(
+                            new FormSubmissionsExcelExport($formId),
+                            $fileName
+                        );
+                    }),
             ])
             ->actions([
                 Action::make('view')
@@ -102,20 +113,32 @@ class SubmissionsRelationManager extends RelationManager
                         
                         Section::make('Form Data')
                             ->schema([
-                                KeyValueEntry::make('processed_data')
+                                TextEntry::make('formatted_data')
                                     ->label('')
-                                    ->keyLabel('Field')
-                                    ->valueLabel('Response')
+                                    ->html()
                                     ->getStateUsing(function ($record) {
-                                        $processedData = [];
+                                        $html = '<div class="space-y-3">';
                                         foreach ($record->data as $key => $value) {
+                                            $html .= '<div class="flex flex-col space-y-1">';
+                                            $html .= '<dt class="font-medium text-sm text-gray-500">' . e($key) . '</dt>';
+                                            
                                             if (is_array($value)) {
-                                                $processedData[$key] = empty($value) ? 'No selection' : implode(', ', $value);
+                                                $html .= '<dd class="text-sm text-gray-900">' . (empty($value) ? 'No selection' : e(implode(', ', $value))) . '</dd>';
+                                            } elseif (is_string($value) && str_starts_with($value, 'form-submissions/')) {
+                                                // Convert file path to clickable link
+                                                $url = asset('storage/' . $value);
+                                                $filename = basename($value);
+                                                $html .= '<dd class="text-sm"><a href="' . $url . '" target="_blank" class="text-blue-600 hover:text-blue-800 underline flex items-center gap-1">';
+                                                $html .= '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path></svg>';
+                                                $html .= e($filename) . '</a></dd>';
                                             } else {
-                                                $processedData[$key] = $value ?: 'Not provided';
+                                                $html .= '<dd class="text-sm text-gray-900">' . e($value ?: 'Not provided') . '</dd>';
                                             }
+                                            
+                                            $html .= '</div>';
                                         }
-                                        return $processedData;
+                                        $html .= '</div>';
+                                        return $html;
                                     }),
                             ]),
                     ]),
@@ -123,8 +146,6 @@ class SubmissionsRelationManager extends RelationManager
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    ExportBulkAction::make()
-                        ->exporter(FormSubmissionExporter::class),
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])

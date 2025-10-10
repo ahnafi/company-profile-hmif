@@ -53,13 +53,23 @@ class FormController extends Controller
         foreach ($form->fields as $field) {
             if (isset($field['type']) && !in_array($field['type'], ['heading', 'paragraph'])) {
                 $fieldName = $this->getFieldName($field);
-                $value = $request->input($fieldName);
                 
+                // Handle file uploads
+                if ($field['type'] === 'file') {
+                    if ($request->hasFile($fieldName)) {
+                        $file = $request->file($fieldName);
+                        $path = $file->store('form-submissions', 'public');
+                        $formData[$field['label']] = $path;
+                    } else {
+                        $formData[$field['label']] = null;
+                    }
+                }
                 // Handle array values properly (for checkboxes)
-                if ($field['type'] === 'checkbox' && is_array($value)) {
-                    $formData[$field['label']] = $value;
+                elseif ($field['type'] === 'checkbox') {
+                    $value = $request->input($fieldName);
+                    $formData[$field['label']] = is_array($value) ? $value : [];
                 } else {
-                    $formData[$field['label']] = $value;
+                    $formData[$field['label']] = $request->input($fieldName);
                 }
             }
         }

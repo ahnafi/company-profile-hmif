@@ -34,7 +34,7 @@
             </div>
 
             <!-- Form -->
-            <form id="dynamic-form" class="space-y-6">
+            <form id="dynamic-form" class="space-y-6" enctype="multipart/form-data">
                 @csrf
                 
                 <!-- Submitter Information -->
