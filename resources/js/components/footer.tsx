@@ -35,16 +35,6 @@ export default function Footer() {
                                     <path d="M549.7 124.1c-6.3-23.7-24.8-42.3-48.3-48.6C458.8 64 288 64 288 64S117.2 64 74.6 75.5c-23.5 6.3-42 24.9-48.3 48.6-11.4 42.9-11.4 132.3-11.4 132.3s0 89.4 11.4 132.3c6.3 23.7 24.8 41.5 48.3 47.8C117.2 448 288 448 288 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zm-317.5 213.5V175.2l142.7 81.2-142.7 81.2z" />
                                 </svg>
                             </a>
-                            {/* <a href="https://x.com">
-                <svg
-                  className="footer-social-media-link"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                >
-                  <path d="M459.4 151.7c.3 4.5 .3 9.1 .3 13.6 0 138.7-105.6 298.6-298.6 298.6-59.5 0-114.7-17.2-161.1-47.1 8.4 1 16.6 1.3 25.3 1.3 49.1 0 94.2-16.6 130.3-44.8-46.1-1-84.8-31.2-98.1-72.8 6.5 1 13 1.6 19.8 1.6 9.4 0 18.8-1.3 27.6-3.6-48.1-9.7-84.1-52-84.1-103v-1.3c14 7.8 30.2 12.7 47.4 13.3-28.3-18.8-46.8-51-46.8-87.4 0-19.5 5.2-37.4 14.3-53 51.7 63.7 129.3 105.3 216.4 109.8-1.6-7.8-2.6-15.9-2.6-24 0-57.8 46.8-104.9 104.9-104.9 30.2 0 57.5 12.7 76.7 33.1 23.7-4.5 46.5-13.3 66.6-25.3-7.8 24.4-24.4 44.8-46.1 57.8 21.1-2.3 41.6-8.1 60.4-16.2-14.3 20.8-32.2 39.3-52.6 54.3z" />
-                </svg>
-              </a> */}
                             <a href="https://www.instagram.com/hmifunsoed/" target="_blank">
                                 <svg
                                     className="footer-social-media-link"
@@ -65,16 +55,24 @@ export default function Footer() {
                                     <path d="M448 209.9a210.1 210.1 0 0 1 -122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0l88 0a121.2 121.2 0 0 0 1.9 22.2h0A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z" />
                                 </svg>
                             </a>
-                            {/* <a href="https://youtube.com">
-                <svg
-                  className="footer-social-media-link"
-                  fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 576 512"
-                >
-                  <path d="M549.7 124.1c-6.3-23.7-24.8-42.3-48.3-48.6C458.8 64 288 64 288 64S117.2 64 74.6 75.5c-23.5 6.3-42 24.9-48.3 48.6-11.4 42.9-11.4 132.3-11.4 132.3s0 89.4 11.4 132.3c6.3 23.7 24.8 41.5 48.3 47.8C117.2 448 288 448 288 448s170.8 0 213.4-11.5c23.5-6.3 42-24.2 48.3-47.8 11.4-42.9 11.4-132.3 11.4-132.3s0-89.4-11.4-132.3zm-317.5 213.5V175.2l142.7 81.2-142.7 81.2z" />
-                </svg>
-              </a> */}
+                        </div>
+                        <div className="mt-6">
+                            <h6 className="mb-3 text-sm font-semibold text-gray-700 dark:text-gray-400">Didukung oleh:</h6>
+                            <div className="flex flex-wrap items-center gap-4">
+                                <a href="https://www.dewaweb.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
+                                    <img
+                                        src="data:image/webp;base64,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"
+                                        alt="DewaWeb"
+                                        className="h-8 w-auto grayscale hover:grayscale-0 transition-all"
+                                        title="DewaWeb"
+                                    />
+                                </a>
+                                {/* Tambahkan logo sponsor lainnya di sini */}
+                                {/* Contoh: */}
+                                {/* <a href="https://sponsor2.com" target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity">
+                                    <img src="/img/sponsors/sponsor2.png" alt="Sponsor 2" className="h-8 w-auto grayscale hover:grayscale-0 transition-all" />
+                                </a> */}
+                            </div>
                         </div>
                     </div>
                     <div className="max-w-sm lg:max-w-sm">
