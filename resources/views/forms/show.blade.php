@@ -185,6 +185,24 @@
                     </div>
                 </div>
 
+                @if($form->redirect)
+                    <div class="border-t pt-6">
+                        <div class="p-4 bg-blue-50 border border-blue-200 rounded-md">
+                            <div class="flex items-start">
+                                <svg class="w-5 h-5 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                                </svg>
+                                <div>
+                                    <h4 class="text-sm font-semibold text-blue-900 mb-1">Informasi </h4>
+                                    <p class="text-sm text-blue-800">
+                                        Setelah Anda mengirim form, Anda akan diarahkan secara otomatis dalam <strong>1-2 detik</strong> ke halaman berikutnya. Mohon tunggu sebentar.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Submit Button -->
                 <div class="border-t pt-6">
                     <button type="submit" 
@@ -244,15 +262,27 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    showMessage('Form berhasil dikirim!', 'success');
                     this.reset();
                     
                     // Check if redirect URL is provided
                     if (result.redirect) {
-                        // Show message for a moment before redirecting
+                        // Show countdown message before redirecting
+                        showMessage('Form berhasil dikirim! Mengalihkan dalam 2 detik...', 'success');
+                        
+                        let countdown = 2;
+                        const countdownInterval = setInterval(() => {
+                            countdown--;
+                            if (countdown > 0) {
+                                showMessage(`Form berhasil dikirim! Mengalihkan dalam ${countdown} detik...`, 'success', true);
+                            }
+                        }, 1000);
+                        
                         setTimeout(() => {
+                            clearInterval(countdownInterval);
                             window.location.href = result.redirect;
-                        }, 1500);
+                        }, 2000);
+                    } else {
+                        showMessage('Form berhasil dikirim!', 'success');
                     }
                 } else {
                     if (result.errors) {
@@ -275,8 +305,14 @@
             }
         });
         
-        function showMessage(message, type) {
+        function showMessage(message, type, replace = false) {
             const container = document.getElementById('message-container');
+            
+            // If replace is true, remove existing messages
+            if (replace) {
+                container.innerHTML = '';
+            }
+            
             const div = document.createElement('div');
             
             const bgColor = type === 'success' ? 'bg-green-500' : 'bg-red-500';
@@ -286,9 +322,12 @@
             
             container.appendChild(div);
             
-            setTimeout(() => {
-                div.remove();
-            }, 5000);
+            // Don't auto-remove if it's a countdown message
+            if (!replace) {
+                setTimeout(() => {
+                    div.remove();
+                }, 5000);
+            }
         }
     </script>
 </body>
