@@ -84,7 +84,14 @@ class FormController extends Controller
             'ip_address' => $request->ip(),
         ]);
         
-        return response()->json(['success' => 'Form submitted successfully']);
+        // Return success response with optional redirect URL
+        $response = ['success' => 'Form submitted successfully'];
+        
+        if (!empty($form->redirect)) {
+            $response['redirect'] = $form->redirect;
+        }
+        
+        return response()->json($response);
     }
     
     private function buildValidationRules(array $fields): array

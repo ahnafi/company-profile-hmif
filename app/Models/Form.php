@@ -22,6 +22,7 @@ class Form extends Model
         'submission_limit',
         'start_date',
         'end_date',
+        'redirect'
     ];
 
     protected $casts = [

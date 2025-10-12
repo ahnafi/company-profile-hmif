@@ -17,6 +17,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Form as FilamentForm;
+use Filament\Notifications\Notification;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Actions\Action;
@@ -28,14 +29,15 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
-use Filament\Notifications\Notification;
 
 class FormResource extends Resource
 {
     protected static ?string $model = Form::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
     protected static ?string $navigationLabel = 'Formulir';
+
     protected static ?string $navigationGroup = 'Form Builder';
 
     protected static ?int $navigationSort = 1;
@@ -75,7 +77,7 @@ class FormResource extends Resource
 
                 Section::make('Pengaturan Formulir')
                     ->schema([
-                        Grid::make(3)
+                        Grid::make(2)
                             ->schema([
                                 Toggle::make('is_active')
                                     ->label('Aktif')
@@ -90,6 +92,25 @@ class FormResource extends Resource
                                     ->numeric()
                                     ->minValue(1)
                                     ->placeholder('Kosongkan untuk tidak terbatas'),
+
+                                TextInput::make('redirect')
+                                    ->nullable()
+                                    ->label('Diarahkan setelah mengisi')
+                                    ->url()
+                                    ->prefix('https://')
+                                    ->placeholder('contoh.com/link-tujuan')
+                                    ->helperText('URL akan otomatis ditambahkan https:// jika belum ada protokol')
+                                    ->dehydrateStateUsing(function ($state) {
+                                        if (empty($state)) {
+                                            return null;
+                                        }
+                                        // Jika sudah ada http:// atau https://, kembalikan apa adanya
+                                        if (preg_match('/^https?:\/\//i', $state)) {
+                                            return $state;
+                                        }
+                                        // Jika belum ada protokol, tambahkan https://
+                                        return 'https://' . $state;
+                                    }),
                             ]),
 
                         Grid::make(2)
@@ -173,7 +194,7 @@ class FormResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-        ->defaultSort("created_at","desc")
+            ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('title')
                     ->label('Judul')
@@ -245,20 +266,20 @@ class FormResource extends Resource
                         ->action(function (Form $record) {
                             // Clone the form
                             $newForm = $record->replicate();
-                            $newForm->title = $record->title . ' (Copy)';
-                            $newForm->slug = Str::slug($record->title . ' Copy ' . now()->timestamp);
+                            $newForm->title = $record->title.' (Copy)';
+                            $newForm->slug = Str::slug($record->title.' Copy '.now()->timestamp);
                             $newForm->is_active = false; // Set inactive by default for safety
                             $newForm->thumbnail = $record->thumbnail; // Copy thumbnail path
-                            
+
                             // Keep the same fields array
                             $newForm->fields = $record->fields;
-                            
+
                             $newForm->save();
 
                             Notification::make()
                                 ->title('Form cloned successfully')
                                 ->success()
-                                ->body('The form "' . $newForm->title . '" has been created. You can now edit it.')
+                                ->body('The form "'.$newForm->title.'" has been created. You can now edit it.')
                                 ->send();
 
                             // Redirect to edit the new form

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->integer('submission_limit')->nullable();
             $table->datetime('start_date')->nullable();
             $table->datetime('end_date')->nullable();
+            $table->string("redirect")->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

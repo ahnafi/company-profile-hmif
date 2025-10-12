@@ -246,6 +246,14 @@
                 if (response.ok) {
                     showMessage('Form berhasil dikirim!', 'success');
                     this.reset();
+                    
+                    // Check if redirect URL is provided
+                    if (result.redirect) {
+                        // Show message for a moment before redirecting
+                        setTimeout(() => {
+                            window.location.href = result.redirect;
+                        }, 1500);
+                    }
                 } else {
                     if (result.errors) {
                         let errorMessage = 'Terjadi kesalahan:\n';
