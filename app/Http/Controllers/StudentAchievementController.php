@@ -13,21 +13,21 @@ class StudentAchievementController extends Controller
     public function index(Request $request)
     {
         $query = Achievement::with([
-            'achievementType', 
-            'achievementCategory', 
-            'achievementLevel', 
-            'students'
+            'achievementType',
+            'achievementCategory',
+            'achievementLevel',
+            'students',
         ])->where('approval', true);
 
         // Filter by search term
         if ($request->filled('search')) {
             $search = $request->get('search');
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%")
-                  ->orWhereHas('students', function($studentQuery) use ($search) {
-                      $studentQuery->where('name', 'LIKE', "%{$search}%");
-                  });
+                    ->orWhere('description', 'LIKE', "%{$search}%")
+                    ->orWhereHas('students', function ($studentQuery) use ($search) {
+                        $studentQuery->where('name', 'LIKE', "%{$search}%");
+                    });
             });
         }
 
@@ -52,19 +52,36 @@ class StudentAchievementController extends Controller
         }
 
         $achievements = $query->orderBy('awarded_at', 'desc')
-                             ->paginate(9)
-                             ->withQueryString();
+            ->paginate(9)
+            ->withQueryString();
 
         $types = AchievementType::orderBy('name')->get();
         $categories = AchievementCategory::orderBy('name')->get();
         $levels = AchievementLevel::orderBy('name')->get();
-        
+
         // Get available years
         $years = Achievement::selectRaw('YEAR(awarded_at) as year')
-                           ->where('approval', true)
-                           ->distinct()
-                           ->orderBy('year', 'desc')
-                           ->pluck('year');
+            ->where('approval', true)
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        // Get top 3 students by achievement count
+        $topStudents = \DB::table('achievement_student')
+            ->join('achievements', 'achievement_student.achievement_id', '=', 'achievements.id')
+            ->join('students', 'achievement_student.student_id', '=', 'students.id')
+            ->where('achievements.approval', true)
+            ->select(
+                'students.id',
+                'students.nim',
+                'students.name',
+                \DB::raw('COUNT(achievement_student.achievement_id) as achievement_count')
+            )
+            ->groupBy('students.id', 'students.nim', 'students.name')
+            ->orderByDesc('achievement_count')
+            ->orderBy('students.nim', 'asc')
+            ->limit(3)
+            ->get();
 
         return inertia('if-bangga', [
             'achievements' => $achievements,
@@ -72,13 +89,14 @@ class StudentAchievementController extends Controller
             'categories' => $categories,
             'levels' => $levels,
             'years' => $years,
+            'topStudents' => $topStudents,
             'filters' => [
                 'search' => $request->get('search'),
                 'type' => $request->get('type', 'all'),
                 'category' => $request->get('category', 'all'),
                 'level' => $request->get('level', 'all'),
                 'year' => $request->get('year', 'all'),
-            ]
+            ],
         ]);
     }
 
@@ -125,23 +143,23 @@ class StudentAchievementController extends Controller
 
         // Parse student NIMs
         $nims = array_map('trim', explode(',', $validated['student_nims']));
-        
+
         // Validate that all NIMs exist in students table
         $students = \App\Models\Student::whereIn('nim', $nims)->get();
-        
+
         if ($students->count() !== count($nims)) {
             return response()->json([
                 'message' => 'Beberapa NIM tidak ditemukan dalam database. Pastikan NIM yang dimasukkan sudah terdaftar.',
                 'errors' => [
-                    'student_nims' => ['NIM tidak valid atau tidak terdaftar']
-                ]
+                    'student_nims' => ['NIM tidak valid atau tidak terdaftar'],
+                ],
             ], 422);
         }
 
         try {
             // Handle image upload
             $imagePath = $request->file('image')->store('ifbangga-image', 'public');
-            
+
             // Handle proof upload if exists
             $proofPath = null;
             if ($request->hasFile('proof')) {
@@ -166,7 +184,7 @@ class StudentAchievementController extends Controller
 
             return response()->json([
                 'message' => 'Prestasi berhasil dikirim dan menunggu verifikasi admin',
-                'achievement' => $achievement
+                'achievement' => $achievement,
             ], 201);
 
         } catch (\Exception $e) {
@@ -180,7 +198,7 @@ class StudentAchievementController extends Controller
 
             return response()->json([
                 'message' => 'Terjadi kesalahan saat menyimpan data',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
