@@ -55,7 +55,7 @@ Route::controller(OrganizationController::class)->group(function () {
 Route::controller(StudentAchievementController::class)->group(function () {
     Route::get('/if-bangga', 'index')->name('student.achievements.index');
     Route::get('/if-bangga/formulir', 'form')->name('student.achievements.form');
-    Route::post('/if-bangga', 'create')->name('student.achievements.create')->middleware('throttle:3,10');
+    Route::post('/if-bangga', 'create')->name('student.achievements.create')->middleware('throttle:3,1');
 });
 
 // keuangan
@@ -69,8 +69,8 @@ Route::prefix('keuangan')->group(function () {
 // Form Builder Routes
 Route::prefix('forms')->group(function () {
     Route::get('/{slug}', [FormController::class, 'show'])->name('forms.show');
-    Route::post('/{slug}/submit', [FormController::class, 'submit'])->name('forms.submit');
-    // Route::post('/{slug}/submit', [FormController::class, 'submit'])->name('forms.submit')->middleware('throttle:3,2');
+    // Route::post('/{slug}/submit', [FormController::class, 'submit'])->name('forms.submit');
+    Route::post('/{slug}/submit', [FormController::class, 'submit'])->name('forms.submit')->middleware('throttle:3,1');
 });
 
 // YouTube Videos API
