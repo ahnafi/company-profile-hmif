@@ -296,7 +296,7 @@
                     }
                 }
             } catch (error) {
-                showMessage('Terjadi kesalahan jaringan', 'error');
+                showMessage('Terlalu banyak mengirim formulir', 'error');
             } finally {
                 // Re-enable submit button
                 submitBtn.disabled = false;
